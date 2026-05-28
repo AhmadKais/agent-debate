@@ -4,20 +4,17 @@ Verifies: orchestration flow, Judge routing, transcript saving, FIFO logging,
 Gatekeeper token tracking, and final verdict parsing.
 """
 import json
-import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.core.config import load_config
+from src.agents.debater_agent import ConAgent, ProAgent
+from src.agents.judge_agent import JudgeAgent
 from src.core.gatekeeper import Gatekeeper
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
-from src.agents.debater_agent import ProAgent, ConAgent
-from src.agents.judge_agent import JudgeAgent
-
 
 # ---------------------------------------------------------------------------
 # Helpers — build fake Anthropic Message objects
@@ -227,7 +224,7 @@ class TestDebateOrchestration:
 
         # Ping 1: Pro opens
         pro_raw = pro.generate_response(
-            f'The debate topic is: "Linux is superior to Windows for software development"\n'
+            'The debate topic is: "Linux is superior to Windows for software development"\n'
             "You are arguing the PRO side. Open with your strongest argument."
         )
         pro_data = json.loads(pro_raw)

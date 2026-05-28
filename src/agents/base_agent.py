@@ -61,11 +61,11 @@ class BaseAgent:
         if not tool_results:
             return self._extract_text(response)
 
-        messages = messages + [
-            {"role": "assistant", "content": response.content},
-            {"role": "user", "content": tool_results},
-        ]
-        follow_up = self.watchdog.run(self._call_api, messages, source=self.name)
+        # Persist tool interaction in history so future turns have full context
+        self.history.append({"role": "assistant", "content": response.content})
+        self.history.append({"role": "user", "content": tool_results})
+
+        follow_up = self.watchdog.run(self._call_api, self.history, source=self.name)
         self.gatekeeper.record(
             follow_up.usage.input_tokens,
             follow_up.usage.output_tokens,
@@ -90,9 +90,10 @@ class BaseAgent:
         )
 
         if response.stop_reason == "tool_use":
+            # _handle_tool_use appends tool interaction to self.history internally
             text = self._handle_tool_use(response, self.history)
         else:
             text = self._extract_text(response)
+            self.history.append({"role": "assistant", "content": text})
 
-        self.history.append({"role": "assistant", "content": text})
         return text

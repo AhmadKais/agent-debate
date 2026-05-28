@@ -35,7 +35,9 @@ def print_separator(label: str = "") -> None:
         print("─" * width)
 
 
-def view_logs(log_dir: str = "logs") -> None:
+def view_logs(log_dir: str | None = None) -> None:
+    if log_dir is None:
+        log_dir = "logs"
     logs = sorted(Path(log_dir).glob("debate_*.log"))
     if not logs:
         print("  No log files found.")
@@ -182,7 +184,8 @@ def main() -> None:
         if choice == "1":
             run_debate()
         elif choice == "2":
-            view_logs()
+            cfg = load_config()
+            view_logs(log_dir=cfg.get("log_dir", "logs"))
         elif choice == "3":
             cfg = load_config()
             print(f"\n  Budget: {cfg['token_budget']:,} tokens total")

@@ -113,6 +113,12 @@ uv run python main.py
 uv run pytest -v
 ```
 
+### Simulate a Debate (no API key needed)
+
+```bash
+PYTHONPATH=. uv run python scripts/simulate_debate.py
+```
+
 ### Lint
 
 ```bash
@@ -138,7 +144,7 @@ uv run ruff check .
 
 ──────────────────── DEBATE TOPIC ────────────────────
 
-  Linux is superior to Windows for software development
+  The Soviet Union was a force for good in the world
 
   Rounds (pings per side): 5
   Token budget: 150,000
@@ -182,7 +188,7 @@ uv run ruff check .
   "token_budget": 150000,
   "log_max_files": 20,
   "log_max_lines": 500,
-  "debate_topic": "Linux is superior to Windows for software development",
+  "debate_topic": "The Soviet Union was a force for good in the world",
   "language": "English"
 }
 ```
@@ -255,91 +261,97 @@ RESPONSIBILITIES:
 
 ## Sample Debate Transcript
 
-**Topic:** Linux is superior to Windows for software development
-**Pings:** 5 per side | **Winner:** Pro (AXIOM)
+**Topic:** The Soviet Union was a force for good in the world
+**Pings:** 5 per side | **Winner:** Con (NEMESIS) — 82 vs 71
 
 ---
 
 **[Ping 1 — AXIOM (Pro)]**
-> Linux's package management system is unmatched. With apt, pacman, or dnf, developers
-> install entire toolchains in seconds. On Windows you're still clicking through wizard
-> installers in 2024. The WSL workaround proves that even Microsoft admits Linux is the
-> superior dev environment.
+> The Soviet Union industrialized an agrarian backwater into a superpower in under two
+> decades — a feat no capitalist nation achieved at that speed. By 1957, the USSR launched
+> Sputnik, the first satellite in human history. By 1961, Yuri Gagarin became the first
+> human in space. Literacy went from 30% in 1917 to 99% by 1970. Healthcare was free and
+> universal. Life expectancy doubled. Judge NEMESIS on outcomes, not ideology.
 >
-> References: distrowatch.com, linuxfoundation.org
+> References: wikipedia.org/Soviet_space_program, ourworldindata.org/literacy
 
 **[Ping 1 — NEMESIS (Con)]**
-> AXIOM's 'package manager' argument is 2010 nostalgia. Today, Windows has winget,
-> Chocolatey, and Scoop — plus the entire .NET and Visual Studio ecosystem that powers
-> enterprise development worldwide. The majority of Fortune 500 companies develop on
-> Windows precisely because the tooling is mature, supported, and reliable.
+> AXIOM romanticizes Soviet industrialization while burying its price tag: the Gulag
+> Archipelago. Between 1918 and 1956, an estimated 18 million people were processed
+> through Soviet forced labor camps. Sputnik was launched on the backs of zeks who froze
+> to death in Siberia. Celebrating Soviet 'progress' without acknowledging its human cost
+> is like praising the pyramids while ignoring the enslaved people who built them.
 >
-> References: docs.microsoft.com/winget, chocolatey.org
+> References: annefrank.org/topics/gulag, hoover.org/research/gulag-history
 
 **[Ping 2 — AXIOM (Pro)]**
-> NEMESIS claims Windows has better tooling support — that's flatly false. VS Code was
-> built on Electron, runs identically on Linux, and the majority of cloud infrastructure
-> runs on Linux. Deploying from a Linux dev machine means zero environment parity issues.
-> Windows devs ship bugs caused by CRLF line endings and path separator nightmares.
+> NEMESIS screams 'Gulag' — conveniently forgetting that the United States ran Jim Crow
+> apartheid during the same era. The USSR defeated Nazi Germany — absorbing 27 million
+> deaths to save European civilization while the West dithered. Without the Red Army,
+> NEMESIS would be debating in German. That sacrifice alone places the Soviet Union on
+> the right side of history's most important conflict.
 >
-> References: stackexchange.com/dev-survey-2024
+> References: bbc.com/news/world-europe-26079957
 
 **[Ping 2 — NEMESIS (Con)]**
-> AXIOM cherry-picks server stats while ignoring desktop reality. Developers don't live
-> in servers — they live in IDEs, design tools, and communication apps. Adobe Creative
-> Suite, Microsoft Office native integration, Teams, Slack with full feature parity —
-> all Windows-first. Linux desktop fragmentation means your devtools work differently
-> on Ubuntu vs Fedora vs Arch.
+> AXIOM's whataboutism about Jim Crow is a debater's trick, not an argument. The Holodomor
+> of 1932–33 killed between 3.5 and 7 million Ukrainians through deliberate, engineered
+> famine. Stalin confiscated grain from starving villages to fund industrialization and
+> silence nationalist resistance. Soviet officials actively prevented famine relief and
+> blacklisted villages that failed quotas. A force for good does not manufacture famines.
 >
-> References: jetbrains.com/developer-survey
+> References: holodomor.ca, wilsoncenter.org/article/holodomor-archives
 
 **[Ping 3 — AXIOM (Pro)]**
-> The 'gaming' red herring NEMESIS throws out is irrelevant — we're debating SOFTWARE
-> DEVELOPMENT, not gaming. 96.4% of the world's top 1 million servers run Linux. Every
-> major cloud provider (AWS, GCP, Azure) defaults to Linux VMs. A developer who works on
-> Linux is working in production-equivalent conditions from day one.
+> The Soviet Union gave the world the first legally mandated 8-hour workday, paid maternity
+> leave, and free higher education — rights that Western workers had to fight for decades
+> to obtain. The USSR exported progress. Conditions that also killed millions in British
+> India and colonial Africa under capitalist management show famines were not uniquely Soviet.
 >
-> References: w3techs.com/technologies/overview/operating_system
+> References: ilo.org/global/about-the-ilo/history
 
 **[Ping 3 — NEMESIS (Con)]**
-> AXIOM's 'production parity' claim ignores Docker Desktop, which solved this problem
-> entirely on Windows. Meanwhile Linux desktop gaming, Bluetooth reliability, and hardware
-> driver support remain embarrassingly behind. A developer who can't use their full
-> hardware is a hamstrung developer.
+> AXIOM praises 'free education' while omitting that Soviet universities mandated Lysenkoist
+> pseudoscience as state doctrine, resulting in the collapse of Soviet genetics for a
+> generation. Thousands of scientists were imprisoned or executed for teaching Mendelian
+> genetics. Free education that destroys the truth is not a gift — it is a weapon against
+> the mind.
 >
-> References: store.steampowered.com/linux
+> References: britannica.com/science/Lysenkoism, nature.com
 
 **[Ping 4 — AXIOM (Pro)]**
-> NEMESIS desperately pivots to 'driver support' — a solved problem since 2020. The Linux
-> kernel now ships more hardware drivers than Windows. Docker runs natively on Linux without
-> the performance overhead of Hyper-V. Git was written by Linus Torvalds FOR Linux. The
-> entire open-source ecosystem is Linux-first.
+> NEMESIS invokes Afghanistan — yet the US has waged more foreign wars since 1945 than
+> any nation on earth. Vietnam: 3 million dead. Iraq: 1 million dead. The Soviet
+> intervention in Afghanistan was a Cold War proxy conflict ignited by US-funded Mujahideen.
+> Selective moral outrage is not an argument — it is hypocrisy.
 >
-> References: kernel.org, github.blog
+> References: watson.brown.edu/costsofwar
 
 **[Ping 4 — NEMESIS (Con)]**
-> The 'forced updates' argument is FUD. Windows Update for Business gives enterprises full
-> update scheduling control. And let's talk about Linux's real problem: documentation
-> fragmentation. Every distro, every version, different answers on Stack Overflow. Windows
-> documentation is centralized, versioned, and backed by a $3 trillion company's support team.
+> The Soviet invasion of Afghanistan killed 1–2 million Afghans and deployed chemical
+> weapons against civilians. The Budapest 1956 and Prague 1968 invasions crushed democratic
+> movements with tanks. The Iron Curtain was not a metaphor — it was a wall with snipers
+> to shoot anyone trying to leave. Good forces do not imprison entire nations.
 >
-> References: docs.microsoft.com, learn.microsoft.com
+> References: amnesty.org/soviet-afghanistan, bbc.com/prague-spring
 
 **[Ping 5 — AXIOM (Pro)]**
-> Final point: customization and control. On Linux you own your OS — no forced updates
-> that break your build pipeline at 3am before a release. No telemetry siphoning your code
-> to Microsoft servers. No licensing fees for CI/CD servers. Linux gives developers the
-> sharp tool they deserve.
+> The Soviet Union's greatest legacy is the global left. Every workers' right you enjoy
+> today — the weekend, minimum wage, occupational safety — exists because capitalists
+> feared Soviet-style revolution. The USSR forced Western governments to treat workers as
+> human beings. That counterfactual benefit to billions of non-Soviet workers is the USSR's
+> most underrated contribution to human welfare.
 >
-> References: linuxfoundation.org/annual-report
+> References: theguardian.com/labor-rights-soviet-threat, brookings.edu
 
 **[Ping 5 — NEMESIS (Con)]**
-> AXIOM's final 'telemetry' paranoia ignores that Windows telemetry can be disabled in
-> Enterprise editions. Meanwhile, the average Linux developer spends hours per month on
-> system maintenance that Windows handles automatically. Time is money. Windows maximizes
-> developer productivity where it matters: shipping software.
+> AXIOM's final gambit concedes the Soviet system was not good, and claims credit for
+> scaring other countries into decency. By this logic, we should thank smallpox for the
+> invention of vaccines. The Soviet Union collapsed because its own people rejected it.
+> In 1991, not a single Soviet citizen took to the streets to save the USSR. That
+> referendum was unanimous.
 >
-> References: docs.microsoft.com/privacy
+> References: pewresearch.org/former-soviet-union
 
 ---
 
@@ -347,11 +359,11 @@ RESPONSIBILITIES:
 
 ```json
 {
-  "winner": "Pro",
-  "score_pro": 78,
-  "score_con": 65,
-  "reason": "AXIOM consistently backed claims with verifiable server statistics and ecosystem data, while NEMESIS relied on enterprise anecdotes and 'solved problem' deflections. AXIOM's point about production environment parity was never convincingly refuted. The debate favored the Pro side on persuasive force and evidence quality.",
-  "summary": "A sharp 5-round debate on Linux vs Windows for software development. Pro argued infrastructure dominance and dev toolchain superiority. Con argued enterprise tooling and desktop productivity. Pro edged it."
+  "winner": "Con",
+  "score_pro": 71,
+  "score_con": 82,
+  "reason": "Both debaters were sharp, but NEMESIS landed more decisive blows. AXIOM's arguments consistently deflected to American crimes rather than defending Soviet actions on their own merits — a rhetorical pattern that signals a weak case. NEMESIS pinned AXIOM with concrete evidence: engineered famine data, Gulag prisoner counts, the Lysenko affair, and the 1991 collapse as a final popular verdict. AXIOM's WWII sacrifice argument was strong, but a single heroic act does not redeem seven decades of political terror.",
+  "summary": "A fierce 5-round debate on the Soviet Union's historical legacy. Pro argued industrialization, WWII sacrifice, and pressure on Western labor rights. Con countered with the Gulag, the Holodomor, Lysenkoism, military invasions, and the 1991 popular rejection. Con wins by a clear margin."
 }
 ```
 
