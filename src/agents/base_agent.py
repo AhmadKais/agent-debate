@@ -90,10 +90,9 @@ class BaseAgent:
         )
 
         if response.stop_reason == "tool_use":
-            # _handle_tool_use appends tool interaction to self.history internally
             text = self._handle_tool_use(response, self.history)
         else:
             text = self._extract_text(response)
-            self.history.append({"role": "assistant", "content": text})
 
+        self.history.append({"role": "assistant", "content": text})
         return text

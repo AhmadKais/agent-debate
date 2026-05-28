@@ -1,5 +1,5 @@
 """
-Standalone simulation of the Soviet Union debate (no API key needed).
+Standalone debate simulation (no API key needed).
 Runs the full orchestration loop with realistic mock arguments and prints
 the complete debate to stdout exactly as the terminal UI would show it.
 """
@@ -17,163 +17,172 @@ from src.core.gatekeeper import Gatekeeper
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
 
-TOPIC = "The Soviet Union was a force for good in the world"
+TOPIC = "Lionel Messi is the greatest footballer of all time, superior to Cristiano Ronaldo"
 
 # ---------------------------------------------------------------------------
-# Realistic mock arguments — Soviet Union PRO side (AXIOM)
+# PRO side (AXIOM) — argues FOR Messi
 # ---------------------------------------------------------------------------
 PRO_RESPONSES = [
     json.dumps({
         "argument": (
-            "The Soviet Union industrialized an agrarian backwater into a superpower in under "
-            "two decades — a feat no capitalist nation achieved at that speed. By 1957, the USSR "
-            "launched Sputnik, the first satellite in human history. By 1961, Yuri Gagarin became "
-            "the first human in space. These are not the achievements of a purely evil empire — "
-            "they are the triumphs of a society that mobilized collective human potential on an "
-            "unprecedented scale. Literacy went from 30% in 1917 to 99% by 1970. Healthcare was "
-            "free and universal. Life expectancy doubled. Judge NEMESIS on outcomes, not ideology."
+            "The numbers are not even close. Messi has won 8 Ballon d'Or awards — the most "
+            "in history. Ronaldo has 5. Messi finished his La Liga career with 474 goals in "
+            "520 games, a ratio Ronaldo never matched in Spain despite playing for the most "
+            "financially powerful club on earth. But statistics alone undersell Messi. He "
+            "doesn't just score — he creates. His 362 La Liga assists dwarf Ronaldo's 131. "
+            "Messi is simultaneously the greatest scorer AND the greatest playmaker of his "
+            "generation. Ronaldo is a phenomenal striker. Messi is a complete footballer."
         ),
         "references_used": [
-            "https://en.wikipedia.org/wiki/Soviet_space_program",
-            "https://ourworldindata.org/literacy",
+            "https://www.transfermarkt.com/lionel-messi/leistungsdaten",
+            "https://www.ballon-dor.com/history",
         ],
     }),
     json.dumps({
         "argument": (
-            "NEMESIS screams 'Gulag' — conveniently forgetting that the United States ran "
-            "Jim Crow apartheid during the same era and conducted the Tuskegee experiments on "
-            "its own citizens. Every great power has atrocities. The question is the balance sheet. "
-            "The USSR defeated Nazi Germany — absorbing 27 million deaths to save European "
-            "civilization while the West dithered. Without the Red Army, NEMESIS would be "
-            "debating in German. That sacrifice alone places the Soviet Union on the right side "
-            "of history's most important conflict."
+            "NEMESIS brings up Champions League goals — fine. Messi won the Champions League "
+            "with Barcelona playing the most beautiful football in history: the Pep Guardiola "
+            "era of 2009-2011 where Barca dismantled every opponent with Messi as the engine. "
+            "Meanwhile, let us talk about international football — the ultimate test. Messi "
+            "won the 2021 Copa América, ending Argentina's 28-year trophy drought, AND the "
+            "2022 World Cup, the most coveted prize in football. He was Player of the Tournament "
+            "at the World Cup at age 35. Ronaldo has won nothing with Portugal at a senior "
+            "tournament. Zero. The World Cup separates legends from icons."
         ),
         "references_used": [
-            "https://www.bbc.com/news/world-europe-26079957",
-            "https://encyclopedia.ushmm.org/content/en/article/soviet-union",
+            "https://www.fifa.com/worldcup/qatar2022/awards",
+            "https://www.conmebol.com/copaamerica2021",
         ],
     }),
     json.dumps({
         "argument": (
-            "NEMESIS clings to the Holodomor without acknowledging that the famine was "
-            "exacerbated by drought and global grain market collapse — conditions that also "
-            "killed millions in British India and colonial Africa under capitalist management. "
-            "Meanwhile, the Soviet Union gave the world the first legally mandated 8-hour "
-            "workday, paid maternity leave, and free higher education — rights that Western "
-            "workers had to fight for decades to obtain. The USSR exported progress."
+            "NEMESIS pivots to athleticism and physicality — the last refuge of the Ronaldo "
+            "argument. Yes, Ronaldo has a magnificent physique. But football is not bodybuilding. "
+            "Messi's low centre of gravity, balance, and close control at full speed are "
+            "superhuman gifts that cannot be manufactured in a gym. Andrés Iniesta, Xavi, "
+            "Zlatan Ibrahimović, and Pep Guardiola — men who played and coached BOTH players — "
+            "unanimously say Messi is the better footballer. When your peers vote you GOAT, "
+            "the argument is over."
         ),
         "references_used": [
-            "https://www.ilo.org/global/about-the-ilo/history",
-            "https://www.jstor.org/stable/holodomor-historiography",
+            "https://www.theguardian.com/football/messi-goat-peer-votes",
+            "https://bleacherreport.com/messi-ibrahimovic-interview",
         ],
     }),
     json.dumps({
         "argument": (
-            "NEMESIS invokes Afghanistan — yet the US has waged more foreign wars since 1945 "
-            "than any nation on earth. Vietnam: 3 million dead. Iraq: 1 million dead. The Soviet "
-            "intervention in Afghanistan was brutal, yes — but it was also a Cold War proxy "
-            "conflict ignited by US-funded Mujahideen. The USSR's military record outside its "
-            "borders pales in comparison to NATO's body count. Selective moral outrage is not "
-            "an argument — it is hypocrisy."
+            "NEMESIS claims Ronaldo's trophies across multiple leagues prove more. This "
+            "argument backfires spectacularly. Messi won 10 La Liga titles — the most "
+            "competitive domestic league of the 2000s-2010s era. He did this while facing "
+            "a Ronaldo-era Real Madrid that spent a billion euros on their squad. Ronaldo "
+            "left the moment the competition got too hard. Messi stayed, dragged average "
+            "squads to titles on pure individual brilliance, and STILL ended his Barca "
+            "career as the all-time top scorer. Loyalty under pressure is not weakness — "
+            "it is character."
         ),
         "references_used": [
-            "https://watson.brown.edu/costsofwar",
-            "https://nsarchive.gwu.edu/afghanistan",
+            "https://www.espn.com/soccer/story/messi-laliga-titles",
+            "https://www.marca.com/messi-vs-ronaldo-trophies",
         ],
     }),
     json.dumps({
         "argument": (
-            "My final argument: the Soviet Union's greatest legacy is the global left. Every "
-            "workers' right you enjoy today — the weekend, minimum wage, occupational safety — "
-            "exists because capitalists feared Soviet-style revolution. The USSR did not merely "
-            "benefit its own citizens; its existence forced Western governments to treat their "
-            "workers as human beings rather than disposable machinery. That counterfactual "
-            "benefit to billions of non-Soviet workers is the Soviet Union's most underrated "
-            "contribution to human welfare."
+            "Final argument: the 2022 World Cup is Messi's definitive masterpiece. Argentina "
+            "vs France in the final was the greatest World Cup final in history. Messi scored "
+            "twice in normal time, once in extra time, converted his penalty in the shootout, "
+            "and delivered the most watched moment in football history. At 35, against the "
+            "best players in the world, he performed his greatest game. Ronaldo at 35 was "
+            "benched by his club, cried in public, and never won a major tournament. "
+            "The World Cup is the GOAT's trophy. Messi has it. Ronaldo does not."
         ),
         "references_used": [
-            "https://www.theguardian.com/commentisfree/labor-rights-soviet-threat",
-            "https://www.brookings.edu/cold-war-welfare-state",
+            "https://www.fifa.com/worldcup/qatar2022/final",
+            "https://www.bbc.com/sport/football/messi-world-cup-2022",
         ],
     }),
 ]
 
 # ---------------------------------------------------------------------------
-# Realistic mock arguments — Soviet Union CON side (NEMESIS)
+# CON side (NEMESIS) — argues FOR Ronaldo
 # ---------------------------------------------------------------------------
 CON_RESPONSES = [
     json.dumps({
         "argument": (
-            "AXIOM romanticizes Soviet industrialization while burying its price tag: the Gulag "
-            "Archipelago. Between 1918 and 1956, an estimated 18 million people were processed "
-            "through Soviet forced labor camps. The 'achievements' AXIOM celebrates — the steel, "
-            "the rockets, the canals — were built on slave labor. Sputnik was launched on the "
-            "backs of zeks who froze to death in Siberia. Celebrating Soviet 'progress' without "
-            "acknowledging its human cost is like praising the pyramids while ignoring the "
-            "enslaved people who built them."
+            "AXIOM waves Ballon d'Or trophies like they are objective truth. They are not — "
+            "they are voted by journalists. In 2010, Xavi Hernández was robbed to give Messi "
+            "his third. In 2012, Ronaldo outscored Messi in La Liga yet lost the award. "
+            "The Ballon d'Or is a popularity contest, not a performance metric. Let us use "
+            "real numbers: Ronaldo has scored 894 career goals — the highest in football "
+            "history. He did it at Manchester United, Real Madrid, AND Juventus, dominating "
+            "THREE different leagues in THREE different countries. Messi has never proven "
+            "himself outside Spain until his twilight years."
         ),
         "references_used": [
-            "https://www.annefrank.org/en/topics/gulag/",
-            "https://www.hoover.org/research/gulag-history",
+            "https://www.transfermarkt.com/cristiano-ronaldo/leistungsdaten",
+            "https://www.guinnessworldrecords.com/cristiano-ronaldo-goals",
         ],
     }),
     json.dumps({
         "argument": (
-            "AXIOM's whataboutism about Jim Crow is a debater's trick, not an argument. "
-            "We are evaluating the Soviet Union — not the United States. The Holodomor of "
-            "1932-33 killed between 3.5 and 7 million Ukrainians through deliberate, engineered "
-            "famine. Stalin confiscated grain from starving villages to fund industrialization "
-            "and silence nationalist resistance. This was not a drought — Soviet officials "
-            "actively prevented famine relief and blacklisted villages that failed quotas. "
-            "A force for good does not manufacture famines to crush dissent."
+            "AXIOM's 'World Cup' argument is the weakest case for Messi. He needed 5 "
+            "attempts and needed to be bailed out by Di María, Mac Allister, and Julián "
+            "Álvarez — a supporting cast Argentina deliberately built around him. Ronaldo "
+            "dragged Portugal to the 2016 Euro title almost single-handedly, scoring 3 goals, "
+            "then won the inaugural UEFA Nations League in 2019. Moreover, Ronaldo scored "
+            "140 Champions League goals — 17 more than Messi — including a hat-trick at "
+            "41 years old for Portugal. He performs on the biggest stages. Every. Single. Time."
         ),
         "references_used": [
-            "https://www.holodomor.ca/what-is-the-holodomor/",
-            "https://www.wilsoncenter.org/article/holodomor-archives",
+            "https://www.uefa.com/uefachampionsleague/history/rankings/players/goals_scored",
+            "https://www.uefa.com/uefaeuro/history/winners",
         ],
     }),
     json.dumps({
         "argument": (
-            "AXIOM praises 'free education' while omitting that Soviet universities were "
-            "ideological indoctrination factories where Lysenkoist pseudoscience was mandated "
-            "state doctrine, resulting in the collapse of Soviet genetics and agricultural "
-            "science for a generation. Thousands of real scientists were imprisoned or executed "
-            "for teaching evolution and Mendelian genetics. Free education that destroys the "
-            "truth is not a gift — it is a weapon against the mind."
+            "AXIOM quotes peers who prefer Messi — cherry-picked opinions. Let me quote "
+            "facts. Ronaldo won Premier League, La Liga, AND Serie A titles. He adapted his "
+            "game across radically different footballing cultures and dominated every one. "
+            "Messi at PSG was invisible — two largely underwhelming seasons where he failed "
+            "to impose himself on Ligue 1. He fled to the MLS retirement league in Miami. "
+            "Ronaldo, at the same age, moved to Saudi Arabia and immediately broke the "
+            "Saudi Pro League scoring record. Same age, completely different impact. "
+            "Adaptability is greatness. Messi is a one-league wonder."
         ),
         "references_used": [
-            "https://www.britannica.com/science/Lysenkoism",
-            "https://www.nature.com/articles/d41586-017-07656-4",
+            "https://www.lequipe.fr/messi-psg-stats",
+            "https://www.arabnews.com/ronaldo-saudi-league-record",
         ],
     }),
     json.dumps({
         "argument": (
-            "AXIOM deflects on Afghanistan by counting American casualties elsewhere. "
-            "Let us stay focused: the Soviet invasion of Afghanistan from 1979 to 1989 "
-            "killed 1-2 million Afghans, created 5 million refugees, and deployed chemical "
-            "weapons against civilian populations. The Budapest 1956 and Prague 1968 "
-            "invasions crushed democratic movements with tanks. The Iron Curtain was not "
-            "a metaphor — it was a wall with snipers to shoot anyone trying to leave. "
-            "Good forces do not imprison entire nations."
+            "AXIOM calls Messi's body a 'superhuman gift.' This is exactly the problem. "
+            "Messi was born with extraordinary natural talent and a perfect build for "
+            "dribbling. Ronaldo was born an average player. He was not the most talented "
+            "teenager at Sporting Lisbon. He became the greatest through iron discipline, "
+            "relentless training, and a refusal to accept physical limitations. He reinvented "
+            "himself from a tricky winger into a lethal striker after 30. That mental "
+            "strength and self-made greatness is more admirable — and more instructive — "
+            "than being born gifted."
         ),
         "references_used": [
-            "https://www.amnesty.org/en/latest/research/soviet-afghanistan/",
-            "https://www.bbc.com/news/world-europe-prague-spring",
+            "https://www.sportingnews.com/ronaldo-training-discipline",
+            "https://www.theathlete.com/ronaldo-self-made-story",
         ],
     }),
     json.dumps({
         "argument": (
-            "AXIOM's final gambit — 'the USSR made capitalism kinder' — is the most desperate "
-            "argument yet. It concedes that the Soviet system itself was not good, and instead "
-            "claims credit for scaring other countries into treating workers better. By this "
-            "logic, we should thank smallpox for the invention of vaccines. The Soviet Union "
-            "collapsed because its own people rejected it. In 1991, not a single Soviet citizen "
-            "took to the streets to save the USSR. That referendum was unanimous: the Soviet "
-            "Union was not a force for good, and its own population knew it best."
+            "My closing argument: consistency over two decades across every competition. "
+            "Ronaldo has scored 50+ goals in a season NINE times. He has scored 30+ goals "
+            "in 17 consecutive seasons. He has scored in 5 different World Cups. He scored "
+            "a free-kick hat-trick against Spain at the 2018 World Cup at age 33. "
+            "The argument that Messi is GOAT rests on one tournament in 2022. Ronaldo's "
+            "case rests on 22 years of elite performance across every competition, every "
+            "league, every stage. Longevity at the summit is the truest measure of greatness. "
+            "By that measure, Ronaldo is untouchable."
         ),
         "references_used": [
-            "https://www.pewresearch.org/global/2011/12/05/confidence-in-democracy-and-capitalism-wanes-in-former-soviet-union/",
-            "https://academic.oup.com/book/soviet-collapse",
+            "https://www.transfermarkt.com/cristiano-ronaldo/leistungsdaten",
+            "https://www.fifaindex.com/ronaldo-world-cup-goals",
         ],
     }),
 ]
@@ -181,24 +190,26 @@ CON_RESPONSES = [
 JUDGE_ROUTE = json.dumps({"route_to": "Con"})
 
 JUDGE_VERDICT = json.dumps({
-    "winner": "Con",
-    "score_pro": 71,
-    "score_con": 82,
+    "winner": "Pro",
+    "score_pro": 79,
+    "score_con": 74,
     "reason": (
-        "Both debaters were sharp, but NEMESIS landed more decisive blows. AXIOM's "
-        "arguments consistently deflected to American crimes rather than defending Soviet "
-        "actions on their own merits — a rhetorical pattern that signals a weak case. "
-        "NEMESIS pinned AXIOM with concrete, specific evidence: engineered famine data, "
-        "Gulag prisoner counts, the Lysenko affair, and the 1991 collapse as a final "
-        "popular verdict. AXIOM's most persuasive moment — the WWII sacrifice argument — "
-        "was strong, but a single heroic act does not redeem seven decades of political "
-        "terror. NEMESIS wins on weight of evidence and logical consistency."
+        "Both debaters made elite arguments in what is genuinely the closest debate in "
+        "football history. NEMESIS landed real blows — the multi-league dominance point "
+        "and the 'self-made greatness' argument were compelling. However, AXIOM's trump "
+        "card proved decisive: the 2022 World Cup. NEMESIS attempted to diminish it by "
+        "citing Messi's supporting cast, but every World Cup winner has a supporting cast "
+        "— Ronaldo never even reached a final to test his. AXIOM's argument that the "
+        "World Cup is the ultimate differentiator was never convincingly refuted. "
+        "Messi's 2022 performance — at 35, in the greatest final ever played — is the "
+        "single most persuasive exhibit in this debate. Pro wins by a narrow but clear margin."
     ),
     "summary": (
-        "A fierce 5-round debate on the Soviet Union's historical legacy. Pro argued "
-        "industrialization, WWII sacrifice, and the pressure the USSR placed on Western "
-        "labor rights. Con countered with the Gulag, the Holodomor, Lysenkoism, military "
-        "invasions, and the 1991 popular rejection. Con wins by a clear margin."
+        "A ferocious 5-round debate on the greatest footballer of all time. Pro argued "
+        "Ballon d'Or dominance, creative supremacy, peer endorsement, and the 2022 World "
+        "Cup. Con argued raw goal records, multi-league adaptability, self-made greatness, "
+        "and 22-year consistency. Pro edges it on the strength of the World Cup argument "
+        "and the quality of Messi's creative output — but this one was close."
     ),
 })
 
@@ -255,7 +266,7 @@ def _wrap(text, width):
 # Main simulation
 # ---------------------------------------------------------------------------
 
-def run_soviet_debate():
+def run_debate():
     print("\n" + "═" * WIDTH)
     print("  AI AGENT DEBATE SYSTEM  v1.0".center(WIDTH))
     print("  Pro vs Con  |  Judged by THE ARBITER".center(WIDTH))
@@ -365,4 +376,4 @@ def run_soviet_debate():
 
 
 if __name__ == "__main__":
-    run_soviet_debate()
+    run_debate()

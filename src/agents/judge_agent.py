@@ -31,10 +31,10 @@ class JudgeAgent(BaseAgent):
 
     def observe(self, side: str, argument: str) -> None:
         self.debate_transcript.append({"side": side, "argument": argument})
-        summary = f"[{side}]: {argument[:120]}..."
+        next_side = "Con" if side == "Pro" else "Pro"
         self.generate_response(
-            f"Debate exchange received — observe and track:\n{summary}\n"
-            f"Respond only with a routing JSON: {{\"route_to\": \"Pro\" or \"Con\"}}"
+            f"Debate exchange received — observe and evaluate:\n[{side}]: {argument}\n\n"
+            f"Respond only with routing JSON: {{\"route_to\": \"{next_side}\"}}"
         )
 
     def declare_winner(self) -> dict:
