@@ -1,0 +1,32 @@
+[project]
+name = "agent-debate"
+version = "0.1.0"
+description = "AI Agent Debate System — Pro vs Con judged by an LLM arbiter"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.104.1",
+    "duckduckgo-search>=8.1.1",
+    "python-dotenv>=1.2.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.15.14",
+]
+
+[project.scripts]
+debate = "main:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
