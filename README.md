@@ -575,6 +575,16 @@ Each API call re-sends the **full conversation history** (including all previous
 
 ![Live Debate Screenshot](assets/debate_screenshot.png)
 
+### Token Usage Analysis
+
+![Token Usage Per Round](assets/token_usage_chart.png)
+
+The chart shows token consumption growing per round as conversation history accumulates. Pro and Con agents (blue/orange) grow quadratically; the Judge verdict (green) is a single burst at the end.
+
+### Cost Breakdown
+
+![Cost Analysis](assets/cost_analysis_chart.png)
+
 ### Verified Live Run Results
 
 Two full debates completed and verified:

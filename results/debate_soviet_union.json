@@ -1,0 +1,24 @@
+{
+  "experiment_id": "debate_001",
+  "date": "2026-06-01",
+  "topic": "The Soviet Union was a force for good in the world",
+  "model": "claude-sonnet-4-6",
+  "max_pings": 5,
+  "winner": "Con",
+  "score_pro": 44,
+  "score_con": 56,
+  "reason": "Con consistently demonstrated superior logical discipline. Three decisive advantages: (1) Distinction between Munich appeasement and the Secret Protocol as active territorial predation was never rebutted. (2) Credentialed prisoner framing for Soviet women neutralized Pro's STEM argument. (3) Cancer/surgery analogy dismantled Pro's shock therapy deflection. Pro relied too heavily on whataboutism.",
+  "summary": "Pro argued WWII sacrifice, Sputnik, literacy, life expectancy gains. Con exposed internal contradictions, mass atrocities, statistical cherry-picking. Con's tighter logical discipline proved decisive.",
+  "token_usage": {
+    "total_tokens": 298854,
+    "input_tokens": 268968,
+    "output_tokens": 29886,
+    "budget": 400000,
+    "remaining": 101146,
+    "api_calls": 22
+  },
+  "cost_usd": 1.79,
+  "per_round_tokens": [4125, 10222, 14706, 22552, 29186, 46569, 50876, 53253, 48721, 53033, 34399],
+  "rounds_completed": 5,
+  "web_searches_performed": 18
+}

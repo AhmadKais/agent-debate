@@ -1,4 +1,8 @@
-"""Base agent: shared LLM call logic, tool execution, token tracking, watchdog."""
+"""Base agent: shared LLM call logic, tool execution, token tracking, watchdog.
+
+All API calls go through Gatekeeper.execute() — never call the Anthropic
+client directly. This enforces the API gateway pattern from §5.1.
+"""
 
 import json
 
@@ -16,7 +20,8 @@ class BaseAgent:
     """Common LLM call logic, tool execution, token tracking, and watchdog wrapping.
 
     All subagents (Pro, Con, Judge) extend this class.
-    Every API call goes through check_budget() → watchdog.run() → record().
+    Every API call is routed through Gatekeeper.execute() — the single
+    audit and enforcement point for cost control.
     """
 
     def __init__(
@@ -28,6 +33,7 @@ class BaseAgent:
         logger: FIFOLogger,
         tools: list[dict] | None = None,
     ):
+        """Initialise agent with shared infrastructure and load model from config."""
         self.name = name
         self.system_prompt = system_prompt
         self.gatekeeper = gatekeeper
@@ -41,7 +47,11 @@ class BaseAgent:
         self.history: list[dict] = []
 
     def _call_api(self, messages: list[dict]) -> anthropic.types.Message:
-        """Send messages to Claude API and return the raw response."""
+        """Send messages to Claude via the Gatekeeper API gateway.
+
+        All budget checking and token recording happens inside
+        gatekeeper.execute() — this method never calls the client directly.
+        """
         kwargs: dict = {
             "model": self.model,
             "max_tokens": self.max_tokens,
@@ -50,13 +60,14 @@ class BaseAgent:
         }
         if self.tools:
             kwargs["tools"] = self.tools
-        return self._client.messages.create(**kwargs)
+        return self.gatekeeper.execute(self._client.messages.create, **kwargs)
 
     def _handle_tool_use(self, response: anthropic.types.Message, depth: int = 0) -> str:
         """Execute tool calls recursively until Claude returns a text response.
 
         Claude sometimes chains multiple searches before writing the argument.
-        Depth cap (_MAX_TOOL_ROUNDS) prevents runaway loops.
+        _MAX_TOOL_ROUNDS depth cap prevents runaway loops.
+        Token recording is handled by gatekeeper.execute() inside _call_api.
         """
         from src.tools.search import web_search
 
@@ -87,7 +98,6 @@ class BaseAgent:
         self.history.append({"role": "user", "content": tool_results})
 
         follow_up = self.watchdog.run(self._call_api, self.history, source=self.name)
-        self.gatekeeper.record(follow_up.usage.input_tokens, follow_up.usage.output_tokens)
 
         if follow_up.stop_reason == "tool_use":
             return self._handle_tool_use(follow_up, depth=depth + 1)
@@ -103,10 +113,10 @@ class BaseAgent:
 
     @staticmethod
     def _strip_markdown(text: str) -> str:
-        """Remove markdown code fences that LLMs sometimes wrap JSON in.
+        """Remove markdown code fences that LLMs sometimes wrap JSON responses in.
 
-        Some models return ```json\\n{...}\\n``` instead of raw JSON.
-        Stripping ensures the stored history and returned value is always clean.
+        Agents are prompted to output raw JSON, but occasionally return
+        ```json ... ``` blocks. Stripping keeps history and returned values clean.
         """
         stripped = text.strip()
         if stripped.startswith("```"):
@@ -116,12 +126,14 @@ class BaseAgent:
         return stripped
 
     def generate_response(self, user_message: str) -> str:
-        """Send a user message, execute any tool calls, return clean text response."""
-        self.gatekeeper.check_budget()
+        """Send a user message, execute any tool calls, return clean text response.
+
+        Budget checking and token recording are handled inside gatekeeper.execute()
+        via _call_api — no explicit check_budget/record calls needed here.
+        """
         self.history.append({"role": "user", "content": user_message})
 
         response = self.watchdog.run(self._call_api, self.history, source=self.name)
-        self.gatekeeper.record(response.usage.input_tokens, response.usage.output_tokens)
         self.logger.info(
             self.name,
             f"Tokens: in={response.usage.input_tokens} out={response.usage.output_tokens}",

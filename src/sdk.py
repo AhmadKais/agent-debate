@@ -68,13 +68,21 @@ class DebateSDK:
         return logger, gatekeeper, watchdog
 
     def _parse_argument(self, raw: str) -> tuple[str, list[str]]:
-        """Extract argument text and references from agent JSON response."""
-        try:
-            start, end = raw.find("{"), raw.rfind("}") + 1
-            data = json.loads(raw[start:end])
-            return data.get("argument", raw), data.get("references_used", [])
-        except (ValueError, json.JSONDecodeError):
-            return raw, []
+        """Extract argument text and references from agent JSON response.
+
+        Uses json.JSONDecoder to find the first valid JSON object in the string,
+        which is more robust than rfind('}') when the argument text contains braces.
+        Falls back to returning the raw string if no valid JSON is found.
+        """
+        decoder = json.JSONDecoder()
+        for start in range(len(raw)):
+            if raw[start] == "{":
+                try:
+                    data, _ = decoder.raw_decode(raw, start)
+                    return data.get("argument", raw), data.get("references_used", [])
+                except json.JSONDecodeError:
+                    continue
+        return raw, []
 
     def _open_debate(self, pro, judge, topic, transcript, gatekeeper, on_argument) -> str:
         """Pro agent opens the debate; Judge routes to Con (child→papa→child)."""

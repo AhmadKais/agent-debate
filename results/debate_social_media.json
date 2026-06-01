@@ -1,0 +1,24 @@
+{
+  "experiment_id": "debate_002",
+  "date": "2026-06-01",
+  "topic": "Social media is destroying the mental health of this generation",
+  "model": "claude-sonnet-4-6",
+  "max_pings": 5,
+  "winner": "Pro",
+  "score_pro": 63,
+  "score_con": 52,
+  "reason": "Pro consistently built a cumulative, emotionally resonant case with multiple reinforcing evidence streams: pre-pandemic trendlines, gendered specificity, Meta internal documents, Surgeon General advisory, and bipartisan legal action. Each time Con landed a blow, Pro recovered with counter-evidence. Con remained predominantly reactive. Pro's fingerprint framing was rhetorically superior.",
+  "summary": "A high-caliber debate. Pro built a multi-layered case using data trends, corporate admissions, and legal action. Con challenged methodology effectively but stayed defensive. Pro's pre-pandemic trendlines and gendered specificity proved most resilient.",
+  "token_usage": {
+    "total_tokens": 368767,
+    "input_tokens": 331890,
+    "output_tokens": 36877,
+    "budget": 400000,
+    "remaining": 31233,
+    "api_calls": 24
+  },
+  "cost_usd": 2.21,
+  "per_round_tokens": [7786, 7871, 14678, 22504, 30558, 37361, 43284, 67594, 56209, 70276, 10646],
+  "rounds_completed": 5,
+  "web_searches_performed": 21
+}
