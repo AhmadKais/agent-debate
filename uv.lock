@@ -8,11 +8,12 @@ resolution-markers = [
 
 [[package]]
 name = "agent-debate"
-version = "1.0.0"
+version = "1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "anthropic" },
     { name = "ddgs" },
+    { name = "pydantic" },
     { name = "python-dotenv" },
 ]
 
@@ -28,6 +29,7 @@ dev = [
 requires-dist = [
     { name = "anthropic", specifier = ">=0.104.1" },
     { name = "ddgs", specifier = ">=9.0.0" },
+    { name = "pydantic", specifier = ">=2.13.4" },
     { name = "python-dotenv", specifier = ">=1.2.2" },
 ]
 

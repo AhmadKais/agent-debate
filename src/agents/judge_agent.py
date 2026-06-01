@@ -1,3 +1,10 @@
+"""Judge (Papa) agent — routes all messages and declares the debate winner.
+
+Architecture: every argument flows child → JudgeAgent → child.
+The Judge evaluates each exchange, decides who speaks next,
+and delivers the final verdict with no ties allowed.
+"""
+
 import json
 
 from src.agents.base_agent import BaseAgent
@@ -12,13 +19,15 @@ RESPONSIBILITIES:
 1. After each exchange, silently track which side is more convincing.
 2. When asked for a FINAL VERDICT, output ONLY valid JSON:
    {"winner": "Pro" or "Con", "reason": "detailed justification", "score_pro": <integer 0-100>, "score_con": <integer 0-100>, "summary": "brief debate summary"}
-3. ABSOLUTE RULE: You CANNOT declare a tie. One side must win. Even if scores are close (e.g., 71 vs 70), pick the winner and justify it.
-4. For routing during the debate, output ONLY: {"route_to": "Con"} or {"route_to": "Pro"}, plus optional {"comment": "brief note"}.
+3. ABSOLUTE RULE: You CANNOT declare a tie. One side must win. Even if scores are close, pick the winner.
+4. For routing during the debate, output ONLY: {"route_to": "Con"} or {"route_to": "Pro"}.
 5. Be fair but decisive. Your verdict is final and cannot be appealed.
 6. Language: English only."""
 
 
 class JudgeAgent(BaseAgent):
+    """Supervises the debate: routes every message and declares the winner."""
+
     def __init__(self, gatekeeper: Gatekeeper, watchdog: Watchdog, logger: FIFOLogger):
         super().__init__(
             name="THE ARBITER (Judge)",
@@ -29,15 +38,29 @@ class JudgeAgent(BaseAgent):
         )
         self.debate_transcript: list[dict] = []
 
-    def observe(self, side: str, argument: str) -> None:
+    def observe(self, side: str, argument: str) -> str:
+        """Receive argument from a debater and route to the next speaker.
+
+        Implements child→papa→child: every argument passes through the Judge
+        before the next debater is allowed to respond.
+
+        Returns: next speaker — 'Pro' or 'Con' (judge's decision).
+        """
         self.debate_transcript.append({"side": side, "argument": argument})
-        next_side = "Con" if side == "Pro" else "Pro"
-        self.generate_response(
-            f"Debate exchange received — observe and evaluate:\n[{side}]: {argument}\n\n"
-            f'Respond only with routing JSON: {{"route_to": "{next_side}"}}'
+        raw = self.generate_response(
+            f"Debate exchange received:\n[{side}]: {argument}\n\n"
+            "Evaluate this argument, then decide who speaks next. "
+            'Respond ONLY with routing JSON: {"route_to": "Con"} or {"route_to": "Pro"}'
         )
+        fallback = "Con" if side == "Pro" else "Pro"
+        return self._parse_route(raw, fallback)
 
     def declare_winner(self) -> dict:
+        """Evaluate the full debate transcript and return verdict JSON.
+
+        Returns a dict with: winner, reason, score_pro, score_con, summary.
+        No ties allowed — winner is always 'Pro' or 'Con'.
+        """
         self.logger.info(self.name, "Declaring final winner")
         transcript_text = "\n\n".join(
             f"[{e['side']}]: {e['argument']}" for e in self.debate_transcript
@@ -45,19 +68,27 @@ class JudgeAgent(BaseAgent):
         prompt = (
             "The debate is now over. Here is the complete transcript:\n\n"
             f"{transcript_text}\n\n"
-            "Now deliver your FINAL VERDICT in the exact JSON format specified in your instructions. "
-            "Keep reason under 200 words and summary under 80 words. NO ties allowed."
+            "Deliver your FINAL VERDICT in the exact JSON format. "
+            "Keep reason under 200 words and summary under 80 words. NO ties."
         )
-        # Verdict JSON needs more room than a routing response
         self.max_tokens = 2048
         raw = self.generate_response(prompt)
-        self.max_tokens = 500  # restore default
+        self.max_tokens = 500
         return self._parse_verdict(raw)
 
-    def _parse_verdict(self, raw: str) -> dict:
+    def _parse_route(self, raw: str, fallback: str) -> str:
+        """Extract route_to value from judge's routing JSON response."""
         try:
-            start = raw.find("{")
-            end = raw.rfind("}") + 1
+            start, end = raw.find("{"), raw.rfind("}") + 1
+            return json.loads(raw[start:end]).get("route_to", fallback)
+        except (ValueError, json.JSONDecodeError):
+            self.logger.warning(self.name, f"Could not parse route from: {raw[:80]}")
+            return fallback
+
+    def _parse_verdict(self, raw: str) -> dict:
+        """Extract structured verdict from judge's final JSON response."""
+        try:
+            start, end = raw.find("{"), raw.rfind("}") + 1
             return json.loads(raw[start:end])
         except (ValueError, json.JSONDecodeError):
             self.logger.error(self.name, f"Failed to parse verdict JSON: {raw[:200]}")

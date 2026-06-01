@@ -1,3 +1,5 @@
+"""Base agent: shared LLM call logic, tool execution, token tracking, watchdog."""
+
 import json
 
 import anthropic
@@ -7,11 +9,15 @@ from src.core.gatekeeper import Gatekeeper
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
 
-_MAX_TOOL_ROUNDS = 5  # guard against infinite tool-call loops
+_MAX_TOOL_ROUNDS = 5  # prevents infinite loop if Claude chains too many searches
 
 
 class BaseAgent:
-    """Common LLM call logic, tool execution, token tracking, and watchdog wrapping."""
+    """Common LLM call logic, tool execution, token tracking, and watchdog wrapping.
+
+    All subagents (Pro, Con, Judge) extend this class.
+    Every API call goes through check_budget() → watchdog.run() → record().
+    """
 
     def __init__(
         self,
@@ -30,11 +36,12 @@ class BaseAgent:
         self.tools = tools or []
         cfg = load_config()
         self.model = cfg["model"]
-        self.max_tokens: int = 500
+        self.max_tokens: int = 500  # overridable per-agent (JudgeAgent uses 2048 for verdict)
         self._client = anthropic.Anthropic(api_key=get_api_key())
         self.history: list[dict] = []
 
     def _call_api(self, messages: list[dict]) -> anthropic.types.Message:
+        """Send messages to Claude API and return the raw response."""
         kwargs: dict = {
             "model": self.model,
             "max_tokens": self.max_tokens,
@@ -46,9 +53,10 @@ class BaseAgent:
         return self._client.messages.create(**kwargs)
 
     def _handle_tool_use(self, response: anthropic.types.Message, depth: int = 0) -> str:
-        """
-        Execute tool calls and recurse until Claude returns a text response.
-        Depth cap prevents infinite loops if Claude keeps requesting more searches.
+        """Execute tool calls recursively until Claude returns a text response.
+
+        Claude sometimes chains multiple searches before writing the argument.
+        Depth cap (_MAX_TOOL_ROUNDS) prevents runaway loops.
         """
         from src.tools.search import web_search
 
@@ -62,7 +70,6 @@ class BaseAgent:
                 self.logger.info(self.name, f"Tool call: {block.name}({block.input})")
                 if block.name == "web_search":
                     results = web_search(block.input["query"])
-                    # Truncate snippets to cap history growth across rounds
                     trimmed = [
                         {"title": r["title"], "url": r["url"], "snippet": r["snippet"][:200]}
                         for r in results
@@ -88,12 +95,28 @@ class BaseAgent:
         return self._extract_text(follow_up)
 
     def _extract_text(self, response: anthropic.types.Message) -> str:
+        """Pull the first text block from a Claude response."""
         for block in response.content:
             if hasattr(block, "text"):
                 return block.text
         return ""
 
+    @staticmethod
+    def _strip_markdown(text: str) -> str:
+        """Remove markdown code fences that LLMs sometimes wrap JSON in.
+
+        Some models return ```json\\n{...}\\n``` instead of raw JSON.
+        Stripping ensures the stored history and returned value is always clean.
+        """
+        stripped = text.strip()
+        if stripped.startswith("```"):
+            lines = stripped.split("\n")
+            inner = lines[1:-1] if lines[-1].strip() == "```" else lines[1:]
+            return "\n".join(inner).strip()
+        return stripped
+
     def generate_response(self, user_message: str) -> str:
+        """Send a user message, execute any tool calls, return clean text response."""
         self.gatekeeper.check_budget()
         self.history.append({"role": "user", "content": user_message})
 
@@ -109,5 +132,6 @@ class BaseAgent:
         else:
             text = self._extract_text(response)
 
+        text = self._strip_markdown(text)
         self.history.append({"role": "assistant", "content": text})
         return text
