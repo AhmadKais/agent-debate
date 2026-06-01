@@ -79,7 +79,8 @@ class DebateSDK:
             if raw[start] == "{":
                 try:
                     data, _ = decoder.raw_decode(raw, start)
-                    return data.get("argument", raw), data.get("references_used", [])
+                    if "argument" in data:  # only accept objects that have the argument key
+                        return data["argument"], data.get("references_used", [])
                 except json.JSONDecodeError:
                     continue
         return raw, []
@@ -102,7 +103,7 @@ class DebateSDK:
 
     def _run_rounds(self, pro, con, judge, pro_arg, max_pings, transcript, gatekeeper, on_argument):
         """Execute debate rounds; judge routes every message, reserves budget for verdict."""
-        verdict_reserve = 60_000
+        verdict_reserve = 100_000  # each late-round ping can use 75k+ tokens
         for ping in range(1, max_pings + 1):
             try:
                 if gatekeeper.status()["remaining"] < verdict_reserve:
