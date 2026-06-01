@@ -111,10 +111,15 @@ class DebateSDK:
         return pro_arg
 
     def _run_rounds(self, pro, con, judge, pro_arg, max_pings, transcript, gatekeeper, on_argument):
+        verdict_reserve = 60_000  # tokens reserved for judge to deliver final verdict
         for ping in range(1, max_pings + 1):
             try:
+                if gatekeeper.status()["remaining"] < verdict_reserve:
+                    break
                 con_arg = self._con_turn(con, judge, pro_arg, ping, transcript, gatekeeper, on_argument)
                 if ping == max_pings:
+                    break
+                if gatekeeper.status()["remaining"] < verdict_reserve:
                     break
                 pro_arg = self._pro_turn(pro, judge, con_arg, ping, transcript, gatekeeper, on_argument)
             except BudgetExceededError:

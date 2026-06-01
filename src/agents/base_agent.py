@@ -7,6 +7,8 @@ from src.core.gatekeeper import Gatekeeper
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
 
+_MAX_TOOL_ROUNDS = 5  # guard against infinite tool-call loops
+
 
 class BaseAgent:
     """Common LLM call logic, tool execution, token tracking, and watchdog wrapping."""
@@ -34,7 +36,7 @@ class BaseAgent:
     def _call_api(self, messages: list[dict]) -> anthropic.types.Message:
         kwargs: dict = {
             "model": self.model,
-            "max_tokens": 1024,
+            "max_tokens": 500,
             "system": self.system_prompt,
             "messages": messages,
         }
@@ -42,9 +44,16 @@ class BaseAgent:
             kwargs["tools"] = self.tools
         return self._client.messages.create(**kwargs)
 
-    def _handle_tool_use(self, response: anthropic.types.Message, messages: list[dict]) -> str:
-        """Process tool_use blocks, execute tools, and get the final text response."""
+    def _handle_tool_use(self, response: anthropic.types.Message, depth: int = 0) -> str:
+        """
+        Execute tool calls and recurse until Claude returns a text response.
+        Depth cap prevents infinite loops if Claude keeps requesting more searches.
+        """
         from src.tools.search import web_search
+
+        if depth >= _MAX_TOOL_ROUNDS:
+            self.logger.warning(self.name, "Max tool rounds reached — extracting text as-is")
+            return self._extract_text(response)
 
         tool_results = []
         for block in response.content:
@@ -52,24 +61,29 @@ class BaseAgent:
                 self.logger.info(self.name, f"Tool call: {block.name}({block.input})")
                 if block.name == "web_search":
                     results = web_search(block.input["query"])
+                    # Truncate snippets to cap history growth across rounds
+                    trimmed = [
+                        {"title": r["title"], "url": r["url"], "snippet": r["snippet"][:200]}
+                        for r in results
+                    ]
                     tool_results.append({
                         "type": "tool_result",
                         "tool_use_id": block.id,
-                        "content": json.dumps(results),
+                        "content": json.dumps(trimmed),
                     })
 
         if not tool_results:
             return self._extract_text(response)
 
-        # Persist tool interaction in history so future turns have full context
         self.history.append({"role": "assistant", "content": response.content})
         self.history.append({"role": "user", "content": tool_results})
 
         follow_up = self.watchdog.run(self._call_api, self.history, source=self.name)
-        self.gatekeeper.record(
-            follow_up.usage.input_tokens,
-            follow_up.usage.output_tokens,
-        )
+        self.gatekeeper.record(follow_up.usage.input_tokens, follow_up.usage.output_tokens)
+
+        if follow_up.stop_reason == "tool_use":
+            return self._handle_tool_use(follow_up, depth=depth + 1)
+
         return self._extract_text(follow_up)
 
     def _extract_text(self, response: anthropic.types.Message) -> str:
@@ -86,11 +100,11 @@ class BaseAgent:
         self.gatekeeper.record(response.usage.input_tokens, response.usage.output_tokens)
         self.logger.info(
             self.name,
-            f"Tokens used: in={response.usage.input_tokens} out={response.usage.output_tokens}",
+            f"Tokens: in={response.usage.input_tokens} out={response.usage.output_tokens}",
         )
 
         if response.stop_reason == "tool_use":
-            text = self._handle_tool_use(response, self.history)
+            text = self._handle_tool_use(response)
         else:
             text = self._extract_text(response)
 
