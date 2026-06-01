@@ -17,172 +17,180 @@ from src.core.gatekeeper import Gatekeeper
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
 
-TOPIC = "Lionel Messi is the greatest footballer of all time, superior to Cristiano Ronaldo"
+TOPIC = "Social media has done more damage to society than any religion or ideology"
 
 # ---------------------------------------------------------------------------
-# PRO side (AXIOM) — argues FOR Messi
+# PRO side (AXIOM) — argues social media HAS done more damage
 # ---------------------------------------------------------------------------
 PRO_RESPONSES = [
     json.dumps({
         "argument": (
-            "The numbers are not even close. Messi has won 8 Ballon d'Or awards — the most "
-            "in history. Ronaldo has 5. Messi finished his La Liga career with 474 goals in "
-            "520 games, a ratio Ronaldo never matched in Spain despite playing for the most "
-            "financially powerful club on earth. But statistics alone undersell Messi. He "
-            "doesn't just score — he creates. His 362 La Liga assists dwarf Ronaldo's 131. "
-            "Messi is simultaneously the greatest scorer AND the greatest playmaker of his "
-            "generation. Ronaldo is a phenomenal striker. Messi is a complete footballer."
+            "The evidence is clinical. Social media has driven a global mental health epidemic "
+            "with no historical parallel. Since 2012 — the year smartphones and social platforms "
+            "reached mass adoption — rates of depression, anxiety, and self-harm among teenagers "
+            "have risen 50-150% across the US, UK, and Australia. Jonathan Haidt's research at "
+            "NYU documents the direct correlation. No religion or ideology in history triggered "
+            "a mental health crisis of this scale, this fast, affecting this many people. "
+            "The Inquisition lasted centuries and killed tens of thousands. Instagram damaged "
+            "the mental health of hundreds of millions of teenage girls in under a decade. "
+            "Speed and scale matter. Social media wins this comparison decisively."
         ),
         "references_used": [
-            "https://www.transfermarkt.com/lionel-messi/leistungsdaten",
-            "https://www.ballon-dor.com/history",
+            "https://jonathanhaidt.com/anxious-generation",
+            "https://www.thelancet.com/journals/lanpsy/article/social-media-mental-health",
         ],
     }),
     json.dumps({
         "argument": (
-            "NEMESIS brings up Champions League goals — fine. Messi won the Champions League "
-            "with Barcelona playing the most beautiful football in history: the Pep Guardiola "
-            "era of 2009-2011 where Barca dismantled every opponent with Messi as the engine. "
-            "Meanwhile, let us talk about international football — the ultimate test. Messi "
-            "won the 2021 Copa América, ending Argentina's 28-year trophy drought, AND the "
-            "2022 World Cup, the most coveted prize in football. He was Player of the Tournament "
-            "at the World Cup at age 35. Ronaldo has won nothing with Portugal at a senior "
-            "tournament. Zero. The World Cup separates legends from icons."
+            "NEMESIS points to historical religious violence — but conveniently ignores that "
+            "social media actively AMPLIFIES and accelerates that same violence today. The "
+            "Rohingya genocide in Myanmar was directly facilitated by Facebook. UN investigators "
+            "concluded that Facebook played a 'determining role' in spreading hate speech that "
+            "led to mass murder. The 2021 Ethiopian civil war was inflamed by Facebook's "
+            "algorithm promoting ethnic incitement. Social media doesn't just cause its own "
+            "damage — it turbocharges every other source of ideological harm. It is a "
+            "damage multiplier for the entire category NEMESIS is defending."
         ),
         "references_used": [
-            "https://www.fifa.com/worldcup/qatar2022/awards",
-            "https://www.conmebol.com/copaamerica2021",
+            "https://www.reuters.com/article/us-myanmar-facebook-un",
+            "https://www.amnesty.org/facebook-rohingya-report",
         ],
     }),
     json.dumps({
         "argument": (
-            "NEMESIS pivots to athleticism and physicality — the last refuge of the Ronaldo "
-            "argument. Yes, Ronaldo has a magnificent physique. But football is not bodybuilding. "
-            "Messi's low centre of gravity, balance, and close control at full speed are "
-            "superhuman gifts that cannot be manufactured in a gym. Andrés Iniesta, Xavi, "
-            "Zlatan Ibrahimović, and Pep Guardiola — men who played and coached BOTH players — "
-            "unanimously say Messi is the better footballer. When your peers vote you GOAT, "
-            "the argument is over."
+            "NEMESIS argues ideologies caused more structural damage. But democracy itself "
+            "is now under threat from social media. The 2016 US election, Brexit, and "
+            "elections across 18 countries show that coordinated disinformation campaigns "
+            "on social platforms have destabilized democratic institutions. The January 6th "
+            "Capitol attack was organized on Facebook and Twitter. No ideology ever had a "
+            "mechanism to radicalize millions of ordinary people in their own living rooms, "
+            "in real time, with algorithmic precision. Social media didn't just spread an "
+            "ideology — it became the infrastructure for radicalization itself."
         ),
         "references_used": [
-            "https://www.theguardian.com/football/messi-goat-peer-votes",
-            "https://bleacherreport.com/messi-ibrahimovic-interview",
+            "https://www.nature.com/articles/s41562-021-social-media-democracy",
+            "https://www.senate.gov/jan6-report-social-media",
         ],
     }),
     json.dumps({
         "argument": (
-            "NEMESIS claims Ronaldo's trophies across multiple leagues prove more. This "
-            "argument backfires spectacularly. Messi won 10 La Liga titles — the most "
-            "competitive domestic league of the 2000s-2010s era. He did this while facing "
-            "a Ronaldo-era Real Madrid that spent a billion euros on their squad. Ronaldo "
-            "left the moment the competition got too hard. Messi stayed, dragged average "
-            "squads to titles on pure individual brilliance, and STILL ended his Barca "
-            "career as the all-time top scorer. Loyalty under pressure is not weakness — "
-            "it is character."
+            "NEMESIS defends religion and ideology by citing their positive contributions — "
+            "hospitals, universities, social cohesion. Where are social media's equivalent "
+            "contributions? Viral cat videos? The attention economy is structurally designed "
+            "to maximize outrage, addiction, and division because those emotions generate "
+            "clicks. No religion was engineered by a for-profit corporation optimizing "
+            "engagement metrics at the expense of human wellbeing. Facebook's own internal "
+            "research — leaked by Frances Haugen — showed they KNEW Instagram harmed "
+            "teenage girls and chose profit over people. That is premeditated social damage."
         ),
         "references_used": [
-            "https://www.espn.com/soccer/story/messi-laliga-titles",
-            "https://www.marca.com/messi-vs-ronaldo-trophies",
+            "https://www.wsj.com/articles/facebook-files-frances-haugen",
+            "https://www.congress.gov/haugen-testimony-2021",
         ],
     }),
     json.dumps({
         "argument": (
-            "Final argument: the 2022 World Cup is Messi's definitive masterpiece. Argentina "
-            "vs France in the final was the greatest World Cup final in history. Messi scored "
-            "twice in normal time, once in extra time, converted his penalty in the shootout, "
-            "and delivered the most watched moment in football history. At 35, against the "
-            "best players in the world, he performed his greatest game. Ronaldo at 35 was "
-            "benched by his club, cried in public, and never won a major tournament. "
-            "The World Cup is the GOAT's trophy. Messi has it. Ronaldo does not."
+            "My closing argument: loneliness. The American Surgeon General declared a "
+            "loneliness epidemic in 2023, citing social media as a primary driver. Humans "
+            "are replacing deep, nourishing relationships with shallow digital performance. "
+            "Friendship rates, marriage rates, and civic participation have collapsed "
+            "precisely as social media use exploded. Every ideology NEMESIS mentions — "
+            "even the destructive ones — built communities, forged bonds, gave people "
+            "belonging. Social media promised connection and delivered isolation at "
+            "civilizational scale. That is the ultimate damage: the erosion of human "
+            "society from the inside."
         ),
         "references_used": [
-            "https://www.fifa.com/worldcup/qatar2022/final",
-            "https://www.bbc.com/sport/football/messi-world-cup-2022",
+            "https://www.hhs.gov/surgeon-general/loneliness-epidemic",
+            "https://www.pewresearch.org/social-media-loneliness-2023",
         ],
     }),
 ]
 
 # ---------------------------------------------------------------------------
-# CON side (NEMESIS) — argues FOR Ronaldo
+# CON side (NEMESIS) — argues religions/ideologies caused MORE damage
 # ---------------------------------------------------------------------------
 CON_RESPONSES = [
     json.dumps({
         "argument": (
-            "AXIOM waves Ballon d'Or trophies like they are objective truth. They are not — "
-            "they are voted by journalists. In 2010, Xavi Hernández was robbed to give Messi "
-            "his third. In 2012, Ronaldo outscored Messi in La Liga yet lost the award. "
-            "The Ballon d'Or is a popularity contest, not a performance metric. Let us use "
-            "real numbers: Ronaldo has scored 894 career goals — the highest in football "
-            "history. He did it at Manchester United, Real Madrid, AND Juventus, dominating "
-            "THREE different leagues in THREE different countries. Messi has never proven "
-            "himself outside Spain until his twilight years."
+            "AXIOM's mental health statistics, however concerning, pale against the body "
+            "count of ideology. The 20th century alone: Communism killed an estimated "
+            "100 million people through famine, gulags, and purges. Nazism killed 70 million "
+            "in World War II. Colonial Christianity enabled the transatlantic slave trade — "
+            "12 million people enslaved over 400 years. The Crusades, the Inquisition, "
+            "sectarian conflicts from Northern Ireland to the Middle East. Social media "
+            "has caused depression and anxiety. Ideologies have caused industrialized "
+            "mass murder. The comparison is not even close on the metric that matters most: "
+            "human lives ended."
         ),
         "references_used": [
-            "https://www.transfermarkt.com/cristiano-ronaldo/leistungsdaten",
-            "https://www.guinnessworldrecords.com/cristiano-ronaldo-goals",
+            "https://www.britannica.com/topic/20th-century-death-toll",
+            "https://www.history.com/topics/slave-trade",
         ],
     }),
     json.dumps({
         "argument": (
-            "AXIOM's 'World Cup' argument is the weakest case for Messi. He needed 5 "
-            "attempts and needed to be bailed out by Di María, Mac Allister, and Julián "
-            "Álvarez — a supporting cast Argentina deliberately built around him. Ronaldo "
-            "dragged Portugal to the 2016 Euro title almost single-handedly, scoring 3 goals, "
-            "then won the inaugural UEFA Nations League in 2019. Moreover, Ronaldo scored "
-            "140 Champions League goals — 17 more than Messi — including a hat-trick at "
-            "41 years old for Portugal. He performs on the biggest stages. Every. Single. Time."
+            "AXIOM blames Facebook for the Rohingya crisis — but Facebook was merely the "
+            "latest medium for hatred that existed long before any app. Myanmar's anti-Rohingya "
+            "sentiment is rooted in Buddhist nationalism decades old. Remove Facebook and the "
+            "hatred does not disappear — it finds another channel. The 1994 Rwandan genocide "
+            "killed 800,000 people in 100 days using RADIO. Radio had no algorithm, no "
+            "engagement optimization, no for-profit motive. Ideological hatred is the root "
+            "cause. Social media is merely the current amplifier. Blaming the microphone "
+            "for the words spoken into it is a category error."
         ),
         "references_used": [
-            "https://www.uefa.com/uefachampionsleague/history/rankings/players/goals_scored",
-            "https://www.uefa.com/uefaeuro/history/winners",
+            "https://www.bbc.com/news/world-africa-rwanda-radio-genocide",
+            "https://www.hrw.org/report/myanmar-rohingya-crisis",
         ],
     }),
     json.dumps({
         "argument": (
-            "AXIOM quotes peers who prefer Messi — cherry-picked opinions. Let me quote "
-            "facts. Ronaldo won Premier League, La Liga, AND Serie A titles. He adapted his "
-            "game across radically different footballing cultures and dominated every one. "
-            "Messi at PSG was invisible — two largely underwhelming seasons where he failed "
-            "to impose himself on Ligue 1. He fled to the MLS retirement league in Miami. "
-            "Ronaldo, at the same age, moved to Saudi Arabia and immediately broke the "
-            "Saudi Pro League scoring record. Same age, completely different impact. "
-            "Adaptability is greatness. Messi is a one-league wonder."
+            "AXIOM claims social media is damaging democracy. But democracy survived the "
+            "printing press — which spread the Protestant Reformation and caused 150 years "
+            "of religious warfare across Europe. It survived radio, which brought Hitler to "
+            "power. It survived television, which was called civilization's doom in the 1960s. "
+            "Every new communication technology triggers a moral panic. Social media is "
+            "not uniquely dangerous to democracy — it is the latest in a long line of "
+            "disruptive media. Meanwhile, Marxist-Leninist ideology actually ABOLISHED "
+            "democracy in 15 countries for 70 years. That is real democratic destruction."
         ),
         "references_used": [
-            "https://www.lequipe.fr/messi-psg-stats",
-            "https://www.arabnews.com/ronaldo-saudi-league-record",
+            "https://www.theatlantic.com/technology/printing-press-reformation",
+            "https://www.freedomhouse.org/democracy-decline-ideology",
         ],
     }),
     json.dumps({
         "argument": (
-            "AXIOM calls Messi's body a 'superhuman gift.' This is exactly the problem. "
-            "Messi was born with extraordinary natural talent and a perfect build for "
-            "dribbling. Ronaldo was born an average player. He was not the most talented "
-            "teenager at Sporting Lisbon. He became the greatest through iron discipline, "
-            "relentless training, and a refusal to accept physical limitations. He reinvented "
-            "himself from a tricky winger into a lethal striker after 30. That mental "
-            "strength and self-made greatness is more admirable — and more instructive — "
-            "than being born gifted."
+            "AXIOM dismisses social media's benefits to score rhetorical points. Let me "
+            "name them: the Arab Spring gave millions their first taste of political agency. "
+            "The #MeToo movement ended the careers of hundreds of serial predators who had "
+            "operated with impunity for decades. Black Lives Matter organized the largest "
+            "protest movement in American history. Social media democratized information, "
+            "gave voice to the voiceless, and connected diaspora communities across the "
+            "world. AXIOM's framing ignores that the same platform that spreads harm also "
+            "enables movements that reduce it. No tool is purely destructive."
         ),
         "references_used": [
-            "https://www.sportingnews.com/ronaldo-training-discipline",
-            "https://www.theathlete.com/ronaldo-self-made-story",
+            "https://www.pewresearch.org/social-media-arab-spring",
+            "https://www.nytimes.com/metoo-social-media-impact",
         ],
     }),
     json.dumps({
         "argument": (
-            "My closing argument: consistency over two decades across every competition. "
-            "Ronaldo has scored 50+ goals in a season NINE times. He has scored 30+ goals "
-            "in 17 consecutive seasons. He has scored in 5 different World Cups. He scored "
-            "a free-kick hat-trick against Spain at the 2018 World Cup at age 33. "
-            "The argument that Messi is GOAT rests on one tournament in 2022. Ronaldo's "
-            "case rests on 22 years of elite performance across every competition, every "
-            "league, every stage. Longevity at the summit is the truest measure of greatness. "
-            "By that measure, Ronaldo is untouchable."
+            "My closing argument: time horizon. Social media has existed for roughly 20 years. "
+            "We are still in the acute phase of adaptation — like the first generation to "
+            "experience cars, electricity, or antibiotics, all of which caused harm before "
+            "society adapted. Ideology, by contrast, has had millennia to perfect its "
+            "mechanisms of control, persecution, and mass violence. The Thirty Years War "
+            "killed 8 million people over religion in the 1600s. The Holocaust was "
+            "ideologically engineered. Social media's damage is real and serious. But to "
+            "claim it surpasses centuries of theocracy, totalitarianism, and genocide is "
+            "to confuse recency with magnitude. History's verdict is clear."
         ),
         "references_used": [
-            "https://www.transfermarkt.com/cristiano-ronaldo/leistungsdaten",
-            "https://www.fifaindex.com/ronaldo-world-cup-goals",
+            "https://www.britannica.com/event/Thirty-Years-War",
+            "https://www.ushmm.org/genocide-definition",
         ],
     }),
 ]
@@ -190,26 +198,28 @@ CON_RESPONSES = [
 JUDGE_ROUTE = json.dumps({"route_to": "Con"})
 
 JUDGE_VERDICT = json.dumps({
-    "winner": "Pro",
-    "score_pro": 79,
-    "score_con": 74,
+    "winner": "Con",
+    "score_pro": 74,
+    "score_con": 83,
     "reason": (
-        "Both debaters made elite arguments in what is genuinely the closest debate in "
-        "football history. NEMESIS landed real blows — the multi-league dominance point "
-        "and the 'self-made greatness' argument were compelling. However, AXIOM's trump "
-        "card proved decisive: the 2022 World Cup. NEMESIS attempted to diminish it by "
-        "citing Messi's supporting cast, but every World Cup winner has a supporting cast "
-        "— Ronaldo never even reached a final to test his. AXIOM's argument that the "
-        "World Cup is the ultimate differentiator was never convincingly refuted. "
-        "Messi's 2022 performance — at 35, in the greatest final ever played — is the "
-        "single most persuasive exhibit in this debate. Pro wins by a narrow but clear margin."
+        "Both debaters made serious, well-evidenced arguments. AXIOM's case was emotionally "
+        "compelling — the mental health data, the Rohingya genocide, the loneliness epidemic "
+        "are all real and disturbing. However, NEMESIS made the decisive move in Round 2 by "
+        "attacking the causal chain: social media amplifies pre-existing hatred, it does not "
+        "create it. The Rwanda radio genocide example was devastating — 800,000 killed with "
+        "no algorithm. NEMESIS also won the time-horizon argument: 20 years of social media "
+        "damage versus millennia of ideological mass murder is not a close comparison by "
+        "body count. AXIOM never successfully refuted the 100 million killed by 20th-century "
+        "ideology. Persuasive force favors the side with the larger historical canvas. "
+        "Con wins clearly."
     ),
     "summary": (
-        "A ferocious 5-round debate on the greatest footballer of all time. Pro argued "
-        "Ballon d'Or dominance, creative supremacy, peer endorsement, and the 2022 World "
-        "Cup. Con argued raw goal records, multi-league adaptability, self-made greatness, "
-        "and 22-year consistency. Pro edges it on the strength of the World Cup argument "
-        "and the quality of Messi's creative output — but this one was close."
+        "A sharp 5-round debate on social media versus religion and ideology as agents of "
+        "societal damage. Pro argued mental health crises, democratic destabilization, "
+        "the Rohingya genocide, and civilizational loneliness. Con argued 20th-century "
+        "death tolls, the Rwanda radio precedent, democracy's survival of past media "
+        "disruptions, and social media's democratizing benefits. Con wins on historical "
+        "magnitude and causal reasoning."
     ),
 })
 

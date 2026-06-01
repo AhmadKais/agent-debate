@@ -1,7 +1,8 @@
 import time
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FuturesTimeoutError
-from typing import Any, Callable
+from typing import Any
 
 from src.core.logger import FIFOLogger
 

@@ -129,6 +129,8 @@ uv run ruff check .
 
 ## Live Debate Output
 
+![Live Debate Screenshot](assets/debate_screenshot.png)
+
 A full verified live run is saved in [`assets/sample_debate_output.txt`](assets/sample_debate_output.txt).
 
 **Result:** Con (NEMESIS) defeats Pro (AXIOM) — Score 56 vs 44  
