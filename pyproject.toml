@@ -1,6 +1,6 @@
 [project]
 name = "agent-debate"
-version = "1.0.0"
+version = "1.00"
 description = "AI Agent Debate System — Pro vs Con judged by an LLM arbiter"
 readme = "README.md"
 requires-python = ">=3.12"

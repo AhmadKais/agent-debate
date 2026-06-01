@@ -1,6 +1,6 @@
 """Immutable project-wide constants. Nothing configurable belongs here."""
 
-VERSION = "1.0.0"
+VERSION = "1.00"
 PROJECT_NAME = "AI Agent Debate System"
 PROJECT_DESCRIPTION = "Three-agent AI debate orchestrated via JSON IPC"
 

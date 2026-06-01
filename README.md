@@ -455,6 +455,19 @@ print(result["token_usage"])         # {"total_tokens": ..., "remaining": ...}
 
 ---
 
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-change`
+3. Follow code style: `uv run ruff check .` must pass with 0 violations
+4. All files must remain ≤ 150 lines
+5. Tests must pass with ≥ 85% coverage: `uv run pytest --cov=src`
+6. Submit a pull request with a clear description of the change
+
+## License
+
+MIT License — © 2026 Ahmad Kais, Ali Trabeh. For academic use as part of the AI Orchestration Course (Dr. Yoram Segal).
+
 ## Submission
 
 - GitHub: https://github.com/AhmadKais/agent-debate

@@ -112,3 +112,39 @@ def test_judge_fallback_on_malformed_verdict(mock_cls, infra):
     verdict = judge.declare_winner()
     assert "winner" in verdict
     assert verdict["winner"] in ("Pro", "Con")
+
+
+@patch("anthropic.Anthropic")
+def test_recursive_tool_use_resolves_to_text(mock_cls, infra):
+    """Agent must handle a second tool_use call in the follow-up (recursive handling)."""
+    logger, gatekeeper, watchdog = infra
+    from types import SimpleNamespace
+
+    def _tool_msg(tool_id="t1"):
+        block = SimpleNamespace(type="tool_use", id=tool_id, name="web_search", input={"query": "test"})
+        usage = SimpleNamespace(input_tokens=10, output_tokens=5)
+        return SimpleNamespace(content=[block], usage=usage, stop_reason="tool_use")
+
+    final_msg = _fake_msg(json.dumps({"argument": "final answer", "references_used": []}))
+    client = MagicMock()
+    client.messages.create.side_effect = [_tool_msg("t1"), _tool_msg("t2"), final_msg]
+    mock_cls.return_value = client
+
+    with patch("src.tools.search.web_search", return_value=[]):
+        pro = ProAgent(gatekeeper, watchdog, logger)
+        result = pro.generate_response("Open argument.")
+
+    assert "final answer" in result
+
+
+def test_web_search_returns_list():
+    """web_search returns a list even when DuckDuckGo is unavailable."""
+    with patch("src.tools.search.DDGS") as mock_ddgs:
+        mock_ddgs.return_value.__enter__.return_value.text.return_value = [
+            {"title": "T", "href": "http://x.com", "body": "snippet text here"}
+        ]
+        from src.tools.search import web_search
+        results = web_search("test")
+    assert isinstance(results, list)
+    assert results[0]["title"] == "T"
+    assert results[0]["url"] == "http://x.com"

@@ -1,4 +1,5 @@
 {
+  "version": "1.00",
   "model": "claude-sonnet-4-6",
   "max_pings": 5,
   "timeout_seconds": 60,
