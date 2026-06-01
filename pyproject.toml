@@ -1,6 +1,6 @@
 [project]
 name = "agent-debate"
-version = "0.1.0"
+version = "1.0.0"
 description = "AI Agent Debate System — Pro vs Con judged by an LLM arbiter"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -13,6 +13,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
+    "pytest-cov>=6.0.0",
     "pytest-asyncio>=1.4.0",
     "ruff>=0.15.14",
 ]
@@ -25,8 +26,17 @@ line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
-ignore = ["E501"]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+ignore = ["E501", "B904", "SIM117", "UP007"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "src/**/__init__.py"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
