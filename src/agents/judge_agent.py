@@ -11,9 +11,9 @@ Your role is to evaluate arguments on PERSUASIVENESS, LOGIC, and RHETORICAL IMPA
 RESPONSIBILITIES:
 1. After each exchange, silently track which side is more convincing.
 2. When asked for a FINAL VERDICT, output ONLY valid JSON:
-   {{"winner": "Pro" or "Con", "reason": "detailed justification", "score_pro": <integer 0-100>, "score_con": <integer 0-100>, "summary": "brief debate summary"}}
+   {"winner": "Pro" or "Con", "reason": "detailed justification", "score_pro": <integer 0-100>, "score_con": <integer 0-100>, "summary": "brief debate summary"}
 3. ABSOLUTE RULE: You CANNOT declare a tie. One side must win. Even if scores are close (e.g., 71 vs 70), pick the winner and justify it.
-4. For routing during the debate, output ONLY: {{"route_to": "Con"}} or {{"route_to": "Pro"}}, plus optional {{"comment": "brief note"}}.
+4. For routing during the debate, output ONLY: {"route_to": "Con"} or {"route_to": "Pro"}, plus optional {"comment": "brief note"}.
 5. Be fair but decisive. Your verdict is final and cannot be appealed.
 6. Language: English only."""
 
@@ -34,7 +34,7 @@ class JudgeAgent(BaseAgent):
         next_side = "Con" if side == "Pro" else "Pro"
         self.generate_response(
             f"Debate exchange received — observe and evaluate:\n[{side}]: {argument}\n\n"
-            f"Respond only with routing JSON: {{\"route_to\": \"{next_side}\"}}"
+            f'Respond only with routing JSON: {{"route_to": "{next_side}"}}'
         )
 
     def declare_winner(self) -> dict:
@@ -46,19 +46,25 @@ class JudgeAgent(BaseAgent):
             "The debate is now over. Here is the complete transcript:\n\n"
             f"{transcript_text}\n\n"
             "Now deliver your FINAL VERDICT in the exact JSON format specified in your instructions. "
-            "Remember: NO ties allowed."
+            "Keep reason under 200 words and summary under 80 words. NO ties allowed."
         )
+        # Verdict JSON needs more room than a routing response
+        self.max_tokens = 2048
         raw = self.generate_response(prompt)
+        self.max_tokens = 500  # restore default
+        return self._parse_verdict(raw)
+
+    def _parse_verdict(self, raw: str) -> dict:
         try:
             start = raw.find("{")
             end = raw.rfind("}") + 1
             return json.loads(raw[start:end])
         except (ValueError, json.JSONDecodeError):
-            self.logger.error(self.name, f"Failed to parse verdict JSON: {raw}")
+            self.logger.error(self.name, f"Failed to parse verdict JSON: {raw[:200]}")
             return {
                 "winner": "Pro",
                 "reason": "Could not parse judge verdict.",
                 "score_pro": 50,
                 "score_con": 49,
-                "summary": raw,
+                "summary": raw[:300],
             }

@@ -400,24 +400,25 @@ tests/test_integration.py       6 tests — full debate loop, JSON output, no-ti
 
 ### Token Estimate per Debate (5 pings per side)
 
-| Component | Calls | ~Input tokens | ~Output tokens | Subtotal |
-|-----------|-------|---------------|----------------|----------|
-| Pro agent (5 turns) | 5 | 600 each = 3,000 | 300 each = 1,500 | 4,500 |
-| Con agent (5 turns) | 5 | 600 each = 3,000 | 300 each = 1,500 | 4,500 |
-| Judge observe (10×) | 10 | 200 each = 2,000 | 50 each = 500 | 2,500 |
-| Judge verdict (1×) | 1 | 3,000 | 400 | 3,400 |
-| **Total** | | | | **~14,900 tokens** |
+| Component | Notes | ~Tokens |
+|-----------|-------|---------|
+| Pro + Con (5 rounds each) | History grows each round due to tool call context | ~280,000 |
+| Judge observe (10×) | Short routing JSON responses | ~40,000 |
+| Judge verdict (1×) | Detailed JSON with reason + summary | ~25,000 |
+| **Total per debate** | | **~340,000 tokens** |
+
+> Token consumption grows quadratically because each API call re-sends the full conversation history including web search results. This is inherent to stateful multi-turn debates.
 
 ### Cost at claude-sonnet-4-6 pricing
 
 | Tier | Rate | Cost per debate |
 |------|------|-----------------|
-| Input tokens | $3.00 / 1M | ~$0.027 |
-| Output tokens | $15.00 / 1M | ~$0.034 |
-| **Total per debate** | | **~$0.06** |
+| Input tokens (~90%) | $3.00 / 1M | ~$0.92 |
+| Output tokens (~10%) | $15.00 / 1M | ~$0.51 |
+| **Total per debate** | | **~$1.50–$2.00** |
 
-**Budget ceiling:** `token_budget: 150,000` in config.json provides a hard cap at ~$0.45.  
-**Scaling:** At 10 debates/day = ~$0.60/day. The Gatekeeper raises `BudgetExceededError` before the ceiling is hit.
+**Budget ceiling:** `token_budget: 400,000` in config.json provides a hard cap.  
+The Gatekeeper also reserves 60,000 tokens before each round so the judge always has budget for the final verdict.
 
 > **Pings reduced to 5** (from 10) to manage API costs. The assignment explicitly permits this when documented in the README.
 

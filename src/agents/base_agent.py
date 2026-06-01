@@ -30,13 +30,14 @@ class BaseAgent:
         self.tools = tools or []
         cfg = load_config()
         self.model = cfg["model"]
+        self.max_tokens: int = 500
         self._client = anthropic.Anthropic(api_key=get_api_key())
         self.history: list[dict] = []
 
     def _call_api(self, messages: list[dict]) -> anthropic.types.Message:
         kwargs: dict = {
             "model": self.model,
-            "max_tokens": 500,
+            "max_tokens": self.max_tokens,
             "system": self.system_prompt,
             "messages": messages,
         }
