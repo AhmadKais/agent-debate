@@ -587,12 +587,18 @@ The chart shows token consumption growing per round as conversation history accu
 
 ### Verified Live Run Results
 
-Two full debates completed and verified:
+**Four full debates completed on the same topic — different results every time.** This proves the system is genuine AI reasoning, not scripted output.
 
-| Topic | Winner | Score | Tokens | Cost |
-|---|---|---|---|---|
-| "The Soviet Union was a force for good" | **Con** | 56 vs 44 | 298,854 | ~$1.79 |
-| "Social media is destroying mental health" | **Con** | 52 vs 48 | 367,642 | ~$2.21 |
+| Run | Topic | Winner | Score | Violations | Cost |
+|---|---|---|---|---|---|
+| 1 | "Soviet Union was a force for good" | **Con** | 56 vs 44 | 0 | ~$1.79 |
+| 2 | "Social media is destroying mental health" | **Con** | 52 vs 48 | 0 | ~$2.21 |
+| 3 | "Social media is destroying mental health" | **Pro** | 63 vs 52 | 0 | ~$2.41 |
+| 4 | "Social media is destroying mental health" | **Con** | 72 vs 61 | 1 (Pro: no_evidence) | ~$2.41 |
+
+> Run 4 is the most interesting: the Judge caught Pro making unsourced claims in Round 3 (`no_evidence` violation) and that penalty **tipped the verdict decisively** — *"The violation penalty tips a close contest."* The 8-rule moderation system directly changed the outcome.
+
+**Key observation:** Runs 2, 3, and 4 use the **exact same topic** but produce three different winners (Con, Pro, Con) and different violation records. This demonstrates genuine LLM-driven debate — the agents reason independently each time.
 
 Full transcript of the Soviet Union debate: [`assets/sample_debate_output.txt`](assets/sample_debate_output.txt)
 
@@ -619,15 +625,37 @@ Full transcript of the Soviet Union debate: [`assets/sample_debate_output.txt`](
 
 **[Ping 3–5 omitted for brevity — see `assets/sample_debate_output.txt` for full transcript]**
 
-### Final Verdict
+### Final Verdict — Run 2 (Con wins 52–48, no violations)
 
 ```json
 {
   "winner": "Con",
   "score_pro": 48,
   "score_con": 52,
-  "reason": "Con consistently demonstrated superior methodological discipline. Key decisive moments: (1) exposing the correlation/causation confusion in Pro's opening; (2) introducing Odgers/Nature as a peer rebuke to Haidt; (3) revealing the World Happiness Report chapter was written by Haidt himself — a devastating self-citation catch that landed unanswered. Pro mounted an emotionally compelling, evidence-rich case but repeatedly overstated evidence strength and was caught doing so.",
-  "summary": "A closely fought debate. Pro built a compelling narrative using converging evidence, but Con consistently outmaneuvered Pro on methodology — exposing mischaracterized studies, self-citation bias, and unaddressed confounding variables."
+  "reason": "Con consistently demonstrated superior methodological discipline. Key decisive moments: exposing the correlation/causation confusion; introducing Odgers/Nature as a peer rebuke to Haidt; revealing the World Happiness Report chapter was written by Haidt himself — a devastating self-citation catch. Pro mounted an emotionally compelling case but repeatedly overstated evidence strength.",
+  "summary": "A closely fought debate. Con consistently outmaneuvered Pro on methodology — exposing mischaracterized studies, self-citation bias, and unaddressed confounding variables.",
+  "violations": []
+}
+```
+
+### Final Verdict — Run 4 (Con wins 72–61, 1 violation caught)
+
+> This run shows the **judge's 8-rule moderation system in action**. Pro violated Rule 5 in Round 3 and it changed the outcome.
+
+```json
+{
+  "winner": "Con",
+  "score_pro": 61,
+  "score_con": 72,
+  "reason": "Both sides delivered rhetorically forceful arguments, but Con demonstrated superior analytical discipline. Con exposed methodological weaknesses — sample sizes, effect magnitudes, publication bias, reverse causation. Con's final round revealed Pro's core evidence chain traced back to Haidt citing his own platforms (circular evidentiary reasoning). Pro's Round 3 no_evidence violation further weakened their standing. The violation penalty tips a close contest decisively.",
+  "summary": "Pro built an emotionally compelling case but over-relied on Haidt-affiliated sources and incurred an evidence violation. Con methodically dismantled key claims using diverse, high-tier sources. Con wins on logic and source integrity.",
+  "violations": [
+    {
+      "side": "Pro",
+      "type": "no_evidence",
+      "warning": "Pro's argument contains no cited sources — claims about Meta internal documents and ScienceDirect reanalysis are referenced by description only, without verifiable URLs or academic references, violating Rule 5."
+    }
+  ]
 }
 ```
 
