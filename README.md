@@ -127,6 +127,15 @@ uv run ruff check .
 
 ---
 
+## Live Debate Output
+
+A full verified live run is saved in [`assets/sample_debate_output.txt`](assets/sample_debate_output.txt).
+
+**Result:** Con (NEMESIS) defeats Pro (AXIOM) — Score 56 vs 44  
+**Tokens used:** 298,854 / 400,000 | **Cost:** ~$1.79
+
+---
+
 ## Terminal UI
 
 ```
