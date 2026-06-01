@@ -396,9 +396,48 @@ tests/test_integration.py       6 tests — full debate loop, JSON output, no-ti
 
 ---
 
+## Costs & Pricing
+
+### Token Estimate per Debate (5 pings per side)
+
+| Component | Calls | ~Input tokens | ~Output tokens | Subtotal |
+|-----------|-------|---------------|----------------|----------|
+| Pro agent (5 turns) | 5 | 600 each = 3,000 | 300 each = 1,500 | 4,500 |
+| Con agent (5 turns) | 5 | 600 each = 3,000 | 300 each = 1,500 | 4,500 |
+| Judge observe (10×) | 10 | 200 each = 2,000 | 50 each = 500 | 2,500 |
+| Judge verdict (1×) | 1 | 3,000 | 400 | 3,400 |
+| **Total** | | | | **~14,900 tokens** |
+
+### Cost at claude-sonnet-4-6 pricing
+
+| Tier | Rate | Cost per debate |
+|------|------|-----------------|
+| Input tokens | $3.00 / 1M | ~$0.027 |
+| Output tokens | $15.00 / 1M | ~$0.034 |
+| **Total per debate** | | **~$0.06** |
+
+**Budget ceiling:** `token_budget: 150,000` in config.json provides a hard cap at ~$0.45.  
+**Scaling:** At 10 debates/day = ~$0.60/day. The Gatekeeper raises `BudgetExceededError` before the ceiling is hit.
+
+> **Pings reduced to 5** (from 10) to manage API costs. The assignment explicitly permits this when documented in the README.
+
+---
+
+## SDK Usage
+
+```python
+from src.sdk import DebateSDK
+
+sdk = DebateSDK()
+result = sdk.run(topic="Is AI beneficial for society?", max_pings=5)
+print(result["verdict"]["winner"])   # "Pro" or "Con"
+print(result["token_usage"])         # {"total_tokens": ..., "remaining": ...}
+```
+
+---
+
 ## Constraints & Limitations
 
-- **Pings reduced to 5** (from 10) to manage API costs. The assignment explicitly permits this when documented in the README.
 - Debate topic is configurable in `config/config.json` — no code changes needed to change the topic.
 - The transcript above was generated from the integration test with realistic mock responses. A live run with a real `ANTHROPIC_API_KEY` will produce a genuine AI-generated debate with live web searches.
 
