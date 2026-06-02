@@ -13,8 +13,6 @@ from src.core.gatekeeper import Gatekeeper
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
 
-_MAX_TOOL_ROUNDS = 5  # prevents infinite loop if Claude chains too many searches
-
 
 class BaseAgent:
     """Common LLM call logic, tool execution, token tracking, and watchdog wrapping.
@@ -42,6 +40,7 @@ class BaseAgent:
         self.tools = tools or []
         cfg = load_config()
         self.model = cfg["model"]
+        self._max_tool_rounds: int = cfg.get("max_tool_rounds", 5)
         self.max_tokens: int = 500  # overridable per-agent (JudgeAgent uses 2048 for verdict)
         self._client = anthropic.Anthropic(api_key=get_api_key())
         self.history: list[dict] = []
@@ -71,7 +70,7 @@ class BaseAgent:
         """
         from src.tools.search import web_search
 
-        if depth >= _MAX_TOOL_ROUNDS:
+        if depth >= self._max_tool_rounds:
             self.logger.warning(self.name, "Max tool rounds reached — extracting text as-is")
             return self._extract_text(response)
 

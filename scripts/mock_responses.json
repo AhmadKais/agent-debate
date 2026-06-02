@@ -1,0 +1,85 @@
+{
+  "topic": "Social media has done more damage to society than any religion or ideology",
+  "pro_responses": [
+    {
+      "argument": "The evidence is clinical. Social media has driven a global mental health epidemic with no historical parallel. Since 2012 — the year smartphones and social platforms reached mass adoption — rates of depression, anxiety, and self-harm among teenagers have risen 50-150% across the US, UK, and Australia. Jonathan Haidt's research at NYU documents the direct correlation. No religion or ideology in history triggered a mental health crisis of this scale, this fast, affecting this many people. The Inquisition lasted centuries and killed tens of thousands. Instagram damaged the mental health of hundreds of millions of teenage girls in under a decade. Speed and scale matter. Social media wins this comparison decisively.",
+      "references_used": [
+        "https://jonathanhaidt.com/anxious-generation",
+        "https://www.thelancet.com/journals/lanpsy/article/social-media-mental-health"
+      ]
+    },
+    {
+      "argument": "NEMESIS points to historical religious violence — but conveniently ignores that social media actively AMPLIFIES and accelerates that same violence today. The Rohingya genocide in Myanmar was directly facilitated by Facebook. UN investigators concluded that Facebook played a 'determining role' in spreading hate speech that led to mass murder. The 2021 Ethiopian civil war was inflamed by Facebook's algorithm promoting ethnic incitement. Social media doesn't just cause its own damage — it turbocharges every other source of ideological harm. It is a damage multiplier for the entire category NEMESIS is defending.",
+      "references_used": [
+        "https://www.reuters.com/article/us-myanmar-facebook-un",
+        "https://www.amnesty.org/facebook-rohingya-report"
+      ]
+    },
+    {
+      "argument": "NEMESIS argues ideologies caused more structural damage. But democracy itself is now under threat from social media. The 2016 US election, Brexit, and elections across 18 countries show that coordinated disinformation campaigns on social platforms have destabilized democratic institutions. The January 6th Capitol attack was organized on Facebook and Twitter. No ideology ever had a mechanism to radicalize millions of ordinary people in their own living rooms, in real time, with algorithmic precision. Social media didn't just spread an ideology — it became the infrastructure for radicalization itself.",
+      "references_used": [
+        "https://www.nature.com/articles/s41562-021-social-media-democracy",
+        "https://www.senate.gov/jan6-report-social-media"
+      ]
+    },
+    {
+      "argument": "NEMESIS defends religion and ideology by citing their positive contributions — hospitals, universities, social cohesion. Where are social media's equivalent contributions? Viral cat videos? The attention economy is structurally designed to maximize outrage, addiction, and division because those emotions generate clicks. No religion was engineered by a for-profit corporation optimizing engagement metrics at the expense of human wellbeing. Facebook's own internal research — leaked by Frances Haugen — showed they KNEW Instagram harmed teenage girls and chose profit over people. That is premeditated social damage.",
+      "references_used": [
+        "https://www.wsj.com/articles/facebook-files-frances-haugen",
+        "https://www.congress.gov/haugen-testimony-2021"
+      ]
+    },
+    {
+      "argument": "My closing argument: loneliness. The American Surgeon General declared a loneliness epidemic in 2023, citing social media as a primary driver. Humans are replacing deep, nourishing relationships with shallow digital performance. Friendship rates, marriage rates, and civic participation have collapsed precisely as social media use exploded. Every ideology NEMESIS mentions — even the destructive ones — built communities, forged bonds, gave people belonging. Social media promised connection and delivered isolation at civilizational scale. That is the ultimate damage: the erosion of human society from the inside.",
+      "references_used": [
+        "https://www.hhs.gov/surgeon-general/loneliness-epidemic",
+        "https://www.pewresearch.org/social-media-loneliness-2023"
+      ]
+    }
+  ],
+  "con_responses": [
+    {
+      "argument": "AXIOM's mental health statistics, however concerning, pale against the body count of ideology. The 20th century alone: Communism killed an estimated 100 million people through famine, gulags, and purges. Nazism killed 70 million in World War II. Colonial Christianity enabled the transatlantic slave trade — 12 million people enslaved over 400 years. The Crusades, the Inquisition, sectarian conflicts from Northern Ireland to the Middle East. Social media has caused depression and anxiety. Ideologies have caused industrialized mass murder. The comparison is not even close on the metric that matters most: human lives ended.",
+      "references_used": [
+        "https://www.britannica.com/topic/20th-century-death-toll",
+        "https://www.history.com/topics/slave-trade"
+      ]
+    },
+    {
+      "argument": "AXIOM blames Facebook for the Rohingya crisis — but Facebook was merely the latest medium for hatred that existed long before any app. Myanmar's anti-Rohingya sentiment is rooted in Buddhist nationalism decades old. Remove Facebook and the hatred does not disappear — it finds another channel. The 1994 Rwandan genocide killed 800,000 people in 100 days using RADIO. Radio had no algorithm, no engagement optimization, no for-profit motive. Ideological hatred is the root cause. Social media is merely the current amplifier. Blaming the microphone for the words spoken into it is a category error.",
+      "references_used": [
+        "https://www.bbc.com/news/world-africa-rwanda-radio-genocide",
+        "https://www.hrw.org/report/myanmar-rohingya-crisis"
+      ]
+    },
+    {
+      "argument": "AXIOM claims social media is damaging democracy. But democracy survived the printing press — which spread the Protestant Reformation and caused 150 years of religious warfare across Europe. It survived radio, which brought Hitler to power. It survived television, which was called civilization's doom in the 1960s. Every new communication technology triggers a moral panic. Social media is not uniquely dangerous to democracy — it is the latest in a long line of disruptive media. Meanwhile, Marxist-Leninist ideology actually ABOLISHED democracy in 15 countries for 70 years. That is real democratic destruction.",
+      "references_used": [
+        "https://www.theatlantic.com/technology/printing-press-reformation",
+        "https://www.freedomhouse.org/democracy-decline-ideology"
+      ]
+    },
+    {
+      "argument": "AXIOM dismisses social media's benefits to score rhetorical points. Let me name them: the Arab Spring gave millions their first taste of political agency. The #MeToo movement ended the careers of hundreds of serial predators who had operated with impunity for decades. Black Lives Matter organized the largest protest movement in American history. Social media democratized information, gave voice to the voiceless, and connected diaspora communities across the world. AXIOM's framing ignores that the same platform that spreads harm also enables movements that reduce it. No tool is purely destructive.",
+      "references_used": [
+        "https://www.pewresearch.org/social-media-arab-spring",
+        "https://www.nytimes.com/metoo-social-media-impact"
+      ]
+    },
+    {
+      "argument": "My closing argument: time horizon. Social media has existed for roughly 20 years. We are still in the acute phase of adaptation — like the first generation to experience cars, electricity, or antibiotics, all of which caused harm before society adapted. Ideology, by contrast, has had millennia to perfect its mechanisms of control, persecution, and mass violence. The Thirty Years War killed 8 million people over religion in the 1600s. The Holocaust was ideologically engineered. Social media's damage is real and serious. But to claim it surpasses centuries of theocracy, totalitarianism, and genocide is to confuse recency with magnitude. History's verdict is clear.",
+      "references_used": [
+        "https://www.britannica.com/event/Thirty-Years-War",
+        "https://www.ushmm.org/genocide-definition"
+      ]
+    }
+  ],
+  "judge_route": {"route_to": "Con"},
+  "judge_verdict": {
+    "winner": "Con",
+    "score_pro": 74,
+    "score_con": 83,
+    "reason": "Both debaters made serious, well-evidenced arguments. AXIOM's case was emotionally compelling — the mental health data, the Rohingya genocide, the loneliness epidemic are all real and disturbing. However, NEMESIS made the decisive move in Round 2 by attacking the causal chain: social media amplifies pre-existing hatred, it does not create it. The Rwanda radio genocide example was devastating — 800,000 killed with no algorithm. NEMESIS also won the time-horizon argument: 20 years of social media damage versus millennia of ideological mass murder is not a close comparison by body count. AXIOM never successfully refuted the 100 million killed by 20th-century ideology. Persuasive force favors the side with the larger historical canvas. Con wins clearly.",
+    "summary": "A sharp 5-round debate on social media versus religion and ideology as agents of societal damage. Pro argued mental health crises, democratic destabilization, the Rohingya genocide, and civilizational loneliness. Con argued 20th-century death tolls, the Rwanda radio precedent, democracy's survival of past media disruptions, and social media's democratizing benefits. Con wins on historical magnitude and causal reasoning."
+  }
+}

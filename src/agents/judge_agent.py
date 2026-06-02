@@ -117,8 +117,11 @@ class JudgeAgent(BaseAgent):
             return verdict
         except (ValueError, json.JSONDecodeError):
             self.logger.error(self.name, f"Failed to parse verdict: {raw[:200]}")
+            pro_v = sum(1 for v in self.violations if v["side"] == "Pro")
+            con_v = sum(1 for v in self.violations if v["side"] == "Con")
+            winner = "Pro" if pro_v <= con_v else "Con"
             return {
-                "winner": "Pro", "reason": "Could not parse verdict.",
+                "winner": winner, "reason": "Could not parse verdict — awarded by violation count.",
                 "score_pro": 50, "score_con": 49,
                 "summary": raw[:300], "violations": self.violations,
             }

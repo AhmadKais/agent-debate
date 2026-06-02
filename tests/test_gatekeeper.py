@@ -29,3 +29,33 @@ def test_exact_budget_raises():
     g = Gatekeeper(token_budget=100)
     with pytest.raises(BudgetExceededError):
         g.record(input_tokens=50, output_tokens=50)
+
+
+def test_status_includes_rate_limit_fields():
+    g = Gatekeeper(token_budget=1000, requests_per_minute=10)
+    s = g.status()
+    assert s["rpm_limit"] == 10
+    assert s["rpm_used"] == 0
+
+
+def test_rate_limit_not_enforced_when_zero():
+    """requests_per_minute=0 means unlimited — _enforce_rate_limit returns immediately."""
+    g = Gatekeeper(token_budget=10_000, requests_per_minute=0)
+    for _ in range(20):
+        g._enforce_rate_limit()
+    assert len(g._rpm_window) == 0
+
+
+def test_rate_limit_window_tracks_calls():
+    """Each _enforce_rate_limit call (with rpm>0) appends a timestamp to the window."""
+    g = Gatekeeper(token_budget=10_000, requests_per_minute=10)
+    g._enforce_rate_limit()
+    g._enforce_rate_limit()
+    g._enforce_rate_limit()
+    assert len(g._rpm_window) == 3
+
+
+def test_load_rate_limits_returns_empty_for_missing_file():
+    from src.core.config import load_rate_limits
+    result = load_rate_limits("/nonexistent/path/rate_limits.json")
+    assert result == {}

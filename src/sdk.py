@@ -12,7 +12,7 @@ from pathlib import Path
 from src.agents.debater_agent import ConAgent, ProAgent
 from src.agents.judge_agent import JudgeAgent
 from src.constants import DEFAULT_CONFIG_PATH, DEFAULT_LOG_DIR, TRANSCRIPT_FILENAME
-from src.core.config import load_config
+from src.core.config import load_config, load_rate_limits
 from src.core.gatekeeper import BudgetExceededError, Gatekeeper
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
@@ -53,13 +53,12 @@ class DebateSDK:
 
     def __init__(self, config_path: str = DEFAULT_CONFIG_PATH) -> None:
         self.cfg = load_config(config_path)
+        if "requests_per_minute" not in self.cfg:
+            rate_cfg = load_rate_limits()
+            self.cfg["requests_per_minute"] = rate_cfg.get("services", {}).get("anthropic", {}).get("requests_per_minute", 0)
 
     def run(self, topic: str | None = None, max_pings: int | None = None, on_argument: object = None) -> dict:
-        """Run a full debate and return {"topic", "transcript", "verdict", "token_usage"}.
-
-        All arguments flow child→Judge→child via judge.observe().
-        on_argument: optional callback(side, name, argument, ping, tokens).
-        """
+        """Run a full debate; returns {"topic", "transcript", "verdict", "token_usage"}."""
         topic = topic or self.cfg["debate_topic"]
         max_pings = max_pings or self.cfg["max_pings"]
 
@@ -86,7 +85,7 @@ class DebateSDK:
             max_files=self.cfg["log_max_files"],
             max_lines=self.cfg["log_max_lines"],
         )
-        gatekeeper = Gatekeeper(token_budget=self.cfg["token_budget"])
+        gatekeeper = Gatekeeper(token_budget=self.cfg["token_budget"], requests_per_minute=self.cfg.get("requests_per_minute", 0))
         watchdog = Watchdog(timeout_seconds=self.cfg["timeout_seconds"], max_retries=self.cfg["max_retries"], logger=logger)
         return logger, gatekeeper, watchdog
 
@@ -108,7 +107,7 @@ class DebateSDK:
 
     def _run_rounds(self, pro, con, judge, pro_arg, max_pings, transcript, gatekeeper, on_argument):
         """Execute debate rounds; judge routes every message, reserves budget for verdict."""
-        verdict_reserve = 100_000  # each late-round ping can use 75k+ tokens
+        verdict_reserve = self.cfg.get("verdict_reserve", 100_000)
         for ping in range(1, max_pings + 1):
             try:
                 if gatekeeper.status()["remaining"] < verdict_reserve:
