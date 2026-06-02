@@ -59,3 +59,23 @@ def test_load_rate_limits_returns_empty_for_missing_file():
     from src.core.config import load_rate_limits
     result = load_rate_limits("/nonexistent/path/rate_limits.json")
     assert result == {}
+
+
+def test_rate_limit_window_concurrent():
+    """RPM window is updated correctly under concurrent calls from multiple threads."""
+    import threading
+
+    g = Gatekeeper(token_budget=100_000, requests_per_minute=100)
+    results: list[int] = []
+
+    def call_enforce() -> None:
+        g._enforce_rate_limit()
+        results.append(1)
+
+    threads = [threading.Thread(target=call_enforce) for _ in range(5)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert len(results) == 5

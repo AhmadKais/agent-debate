@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field
+
+AgentRole = Literal["pro", "con", "judge"]
 
 
 class Message(BaseModel):
@@ -12,11 +15,12 @@ class Message(BaseModel):
 
     Every message flows: sender → Judge → recipient.
     The Judge observes, routes, and logs each Message before forwarding.
+    `sender` and `recipient` are validated against the three agent roles.
     """
 
     round: int
-    sender: str       # "pro" | "con" | "judge"
-    recipient: str    # "pro" | "con" | "judge"
+    sender: AgentRole       # "pro" | "con" | "judge"
+    recipient: AgentRole    # "pro" | "con" | "judge"
     content: str
     timestamp: str = Field(
         default_factory=lambda: datetime.now(UTC).isoformat()

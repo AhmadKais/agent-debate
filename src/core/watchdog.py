@@ -22,8 +22,8 @@ class Watchdog:
     """Wraps any callable with timeout + exponential back-off retry.
 
     Designed for autonomous agent environments where API calls may stall.
-    Each failed attempt is logged. After max_retries the last exception
-    is re-raised so the caller can handle it (e.g. skip the round).
+    Each failed attempt is logged with elapsed milliseconds. After max_retries
+    the last exception is re-raised so the caller can handle it.
     """
 
     def __init__(self, timeout_seconds: int, max_retries: int, logger: FIFOLogger):
@@ -37,16 +37,19 @@ class Watchdog:
 
         Uses ThreadPoolExecutor so the timeout is enforced even on blocking calls.
         Back-off: sleeps 2^attempt seconds between retries (2s, 4s, 8s…).
+        Logs actual elapsed milliseconds on each timeout for diagnostics.
         """
         last_exc: Exception | None = None
         for attempt in range(1, self.max_retries + 1):
+            t_start = time.monotonic()
             try:
                 with ThreadPoolExecutor(max_workers=1) as pool:
                     future = pool.submit(fn, *args, **kwargs)
                     return future.result(timeout=self.timeout_seconds)
             except FuturesTimeoutError:
+                elapsed_ms = int((time.monotonic() - t_start) * 1000)
                 last_exc = WatchdogTimeoutError(
-                    f"Timed out after {self.timeout_seconds}s (attempt {attempt}/{self.max_retries})"
+                    f"Timed out after {elapsed_ms}ms (attempt {attempt}/{self.max_retries})"
                 )
                 self.logger.warning(source, str(last_exc))
                 if attempt < self.max_retries:

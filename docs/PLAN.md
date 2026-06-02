@@ -167,8 +167,11 @@ All external consumers (CLI, tests) go through `DebateSDK`. No direct imports fr
 DuckDuckGo has no API key requirement and is free. Satisfies the "internet search
 tool is mandatory" requirement without adding credentials.
 
-**ADR-3: Pings reduced 10 → 5**  
-Budget constraint (~$2.40 per full debate). Explicitly permitted by assignment if documented.
+**ADR-3: Pings reduced 10 → 5 (assignment-permitted, cost-justified)**  
+The assignment explicitly states: *"ניתן להוריד מ-10 ל-5 — לא יגרע מהציון"* (§8.7 — "You may
+reduce from 10 to 5; it will not reduce the grade"). Each side argues 5 times = 10 total
+exchanges. Cost rationale: 10 pings/side consumes ~800k–1M tokens (~$5–6 per debate), which
+is prohibitive for a demo system. 5 pings produces substantive 10-exchange debates at ~$2.40.
 
 **ADR-4: BaseAgent holds conversation history**  
 Each agent maintains its own `self.history` list for multi-turn context. Judge
@@ -178,6 +181,15 @@ history is separate from debater history.
 `DebateSDK.__init__` loads `rate_limits.json` and merges RPM into `self.cfg`.
 Tests that bypass `__init__` (via `__new__`) default to `requests_per_minute=0`
 (unlimited), keeping the test suite fast without patching.
+
+**ADR-6: Sequential debate execution (not parallel threads)**  
+Agents execute one at a time: Pro → Judge → Con → Judge → Pro (strictly ordered turns).
+A debate protocol is inherently sequential — each rebuttal must receive and process the
+opponent's previous argument before forming a response. Parallel execution would require
+synchronized message queues that still serialize turns at the logical level, adding
+complexity with no benefit. The "separate agent instances" requirement (§8.5) is fully
+satisfied: each agent is a distinct Python object with independent `history`,
+`system_prompt`, and `_client` — no state is shared between Pro and Con.
 
 ---
 

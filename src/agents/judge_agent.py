@@ -13,6 +13,17 @@ from src.core.gatekeeper import Gatekeeper
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
 
+_RULE_NAMES = (
+    "off_topic",      # R1: argument not about the debate topic
+    "no_rebuttal",    # R2: agent ignores the opponent's last point
+    "empty_argument", # R3: response is blank or fewer than 20 words
+    "concession",     # R4: agent explicitly agrees with opponent's core claim
+    "no_evidence",    # R5: no factual citations or evidence presented
+    "profanity",      # R6: offensive or inappropriate language
+    "ad_hominem",     # R7: personal attack instead of argument attack
+    "repetition",     # R8: substantially identical to a prior round
+)
+
 
 class RuleViolationError(Exception):
     """Raised when a debater commits a critical rule violation."""
@@ -100,7 +111,7 @@ class JudgeAgent(BaseAgent):
             violations = data.get("violations") or []
             warnings = data.get("warnings") or []
             for v_type, warning in zip(violations, warnings, strict=False):
-                if v_type and v_type != "null":
+                if v_type and v_type in _RULE_NAMES:
                     self.violations.append({"side": side, "type": v_type, "warning": warning})
                     self.logger.warning(self.name, f"VIOLATION [{side}] {v_type}: {warning}")
             return data.get("route_to", fallback)

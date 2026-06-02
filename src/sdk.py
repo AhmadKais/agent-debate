@@ -13,7 +13,7 @@ from src.agents.debater_agent import ConAgent, ProAgent
 from src.agents.judge_agent import JudgeAgent
 from src.constants import DEFAULT_CONFIG_PATH, DEFAULT_LOG_DIR, TRANSCRIPT_FILENAME
 from src.core.config import load_config, load_rate_limits
-from src.core.gatekeeper import BudgetExceededError, Gatekeeper
+from src.core.gatekeeper import BudgetExceededError, Gatekeeper, RateLimitExceededError
 from src.core.logger import FIFOLogger
 from src.core.watchdog import Watchdog
 from src.data_types.message import Message
@@ -72,8 +72,8 @@ class DebateSDK:
             pro_arg = self._open_debate(pro, judge, topic, transcript, gatekeeper, on_argument)
             self._run_rounds(pro, con, judge, pro_arg, max_pings, transcript, gatekeeper, on_argument)
             verdict = judge.declare_winner()
-        except BudgetExceededError as exc:
-            verdict = {"winner": "Pro", "reason": f"Budget exceeded: {exc}", "score_pro": 0, "score_con": 0}
+        except (BudgetExceededError, RateLimitExceededError) as exc:
+            verdict = {"winner": "Pro", "reason": f"Debate ended early: {exc}", "score_pro": 0, "score_con": 0}
 
         self._save_transcript(transcript, verdict, topic)
         return {"topic": topic, "transcript": transcript, "verdict": verdict, "token_usage": gatekeeper.status()}
@@ -118,7 +118,7 @@ class DebateSDK:
                 if gatekeeper.status()["remaining"] < verdict_reserve:
                     break
                 pro_arg = self._pro_turn(pro, judge, con_arg, ping, transcript, gatekeeper, on_argument)
-            except BudgetExceededError:
+            except (BudgetExceededError, RateLimitExceededError):
                 break
 
     def _con_turn(self, con, judge, pro_arg, ping, transcript, gatekeeper, on_argument) -> str:

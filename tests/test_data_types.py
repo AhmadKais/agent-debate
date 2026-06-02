@@ -37,6 +37,16 @@ class TestMessage:
         assert msg.timestamp != ""
         assert "T" in msg.timestamp  # ISO format
 
+    def test_invalid_sender_rejected(self):
+        from pydantic import ValidationError
+        with pytest.raises(ValidationError):
+            Message(round=1, sender="invalid_agent", recipient="con", content="test")
+
+    def test_invalid_recipient_rejected(self):
+        from pydantic import ValidationError
+        with pytest.raises(ValidationError):
+            Message(round=1, sender="pro", recipient="unknown_agent", content="test")
+
 
 class TestDebateResult:
     def test_valid_pro_winner(self):
