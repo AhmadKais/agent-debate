@@ -9,6 +9,8 @@ import json
 import re
 from pathlib import Path
 
+import anthropic
+
 from src.agents.debater_agent import ConAgent, ProAgent
 from src.agents.judge_agent import JudgeAgent
 from src.constants import DEFAULT_CONFIG_PATH, DEFAULT_LOG_DIR, TRANSCRIPT_FILENAME
@@ -20,10 +22,8 @@ from src.data_types.message import Message
 
 
 def _parse_argument(raw: str) -> tuple[str, list[str]]:
-    """Extract clean argument text and references from agent JSON response.
-
-    Three-stage: direct json.loads → embedded scan → regex fallback.
-    The regex handles Claude's occasional unescaped newlines in JSON strings.
+    """Extract argument text and references from agent JSON response.
+    Three-stage: json.loads → embedded scan → regex fallback for malformed JSON.
     """
     text = raw.strip()
     try:  # Stage 1: direct parse
@@ -72,7 +72,7 @@ class DebateSDK:
             pro_arg = self._open_debate(pro, judge, topic, transcript, gatekeeper, on_argument)
             self._run_rounds(pro, con, judge, pro_arg, max_pings, transcript, gatekeeper, on_argument)
             verdict = judge.declare_winner()
-        except (BudgetExceededError, RateLimitExceededError) as exc:
+        except (BudgetExceededError, RateLimitExceededError, anthropic.APIConnectionError, anthropic.APIStatusError) as exc:
             verdict = {"winner": "Pro", "reason": f"Debate ended early: {exc}", "score_pro": 0, "score_con": 0}
 
         self._save_transcript(transcript, verdict, topic)
